@@ -1068,6 +1068,273 @@
     function makeGas(cx, cz) {
       return new THREE.Group();
     }
+
+    /* ---------------- factory (front of WH 1) & malls (behind WH 2 & WH 3) ---------------- */
+    function makeFactory(cx, cz) {
+      const g = new THREE.Group(); g.position.set(cx, 0, cz); townStatic.add(g);
+      // Heavy industrial yard & foundation
+      box(48, 0.08, 38, '#262e3d', 0, 0.04, 0, g, false);
+      box(49.2, 0.16, 39.2, '#94a3b8', 0, 0.08, 0, g, false);
+      box(22, 0.09, 14, '#3b4354', 12, 0.045, 11, g, false);
+
+      // Yellow safety hatchings
+      for (let s = -18; s <= 18; s += 2.4) {
+        box(1.2, 0.012, 0.22, '#f59e0b', s, 0.09, 17.6, g, false);
+        box(1.2, 0.012, 0.22, '#f59e0b', s, 0.09, -17.6, g, false);
+      }
+
+      // Main Manufacturing Hall
+      const hallW = 26, hallH = 6.4, hallD = 22;
+      box(hallW, hallH, hallD, '#475569', -6, hallH / 2, -2, g);
+      box(hallW + 0.4, 0.35, hallD + 0.4, '#f59e0b', -6, hallH + 0.15, -2, g);
+
+      // Sawtooth industrial roof with north-facing skylights
+      for (let k = 0; k < 4; k++) {
+        const zOffset = -11 + k * 5.5 + 2.75;
+        const roofP = new THREE.Mesh(prism(hallW + 0.2, 5.4, 1.8), mat('#334155'));
+        roofP.position.set(-6, hallH + 0.3, zOffset);
+        roofP.castShadow = true;
+        g.add(roofP);
+        box(hallW - 1, 1.1, 0.1, '#93c5fd', -6, hallH + 1.1, zOffset - 2.5, g, false);
+      }
+
+      // Industrial Chimneys / Smokestacks
+      cyl(1.4, 1.9, 19, '#475569', -15, 9.5, -9, g, 20);
+      cyl(1.42, 1.48, 1.8, '#ef4444', -15, 17.1, -9, g, 20);
+      cyl(1.41, 1.45, 1.8, '#ffffff', -15, 15.3, -9, g, 20);
+      cyl(1.40, 1.43, 1.8, '#ef4444', -15, 13.5, -9, g, 20);
+      cyl(1.55, 1.55, 0.4, '#1e293b', -15, 19.2, -9, g, 20);
+
+      cyl(1.1, 1.5, 15.5, '#64748b', -11, 7.75, -11, g, 20);
+      cyl(1.12, 1.17, 1.5, '#ef4444', -11, 13.8, -11, g, 20);
+      cyl(1.11, 1.14, 1.5, '#ffffff', -11, 12.3, -11, g, 20);
+      cyl(1.10, 1.12, 1.5, '#ef4444', -11, 10.8, -11, g, 20);
+      cyl(1.25, 1.25, 0.35, '#1e293b', -11, 15.6, -11, g, 20);
+
+      box(0.9, 0.9, 6.5, '#64748b', -13, 5.2, -7.5, g);
+
+      // Fabrication / Assembly Hall
+      box(14, 4.8, 18, '#334155', 12, 2.4, -4, g);
+      box(14.3, 0.3, 18.3, '#f59e0b', 12, 4.9, -4, g);
+      box(3.2, 1.4, 2.4, '#64748b', 10, 5.6, -6, g);
+      cyl(0.7, 0.7, 0.8, '#94a3b8', 10, 6.7, -6, g, 16);
+      box(2.8, 1.2, 2.2, '#64748b', 14, 5.5, -2, g);
+
+      // Overhead Conveyor / Piping Bridge
+      box(4, 1.4, 1.4, '#64748b', 4, 3.8, -5, g);
+
+      // Chemical / Raw Material Silos
+      cyl(2.7, 2.7, 8.2, '#f1f5f9', 15, 4.1, 9, g, 24);
+      const c1 = new THREE.Mesh(new THREE.ConeGeometry(2.75, 1.2, 24), mat('#cbd5e1'));
+      c1.position.set(15, 8.8, 9); g.add(c1);
+
+      cyl(2.4, 2.4, 7.4, '#94a3b8', 9.5, 3.7, 10, g, 24);
+      const c2 = new THREE.Mesh(new THREE.ConeGeometry(2.45, 1.1, 24), mat('#64748b'));
+      c2.position.set(9.5, 7.95, 10); g.add(c2);
+
+      cyl(2.0, 2.0, 6.2, '#38bdf8', 4.5, 3.1, 11, g, 24);
+      const c3 = new THREE.Mesh(new THREE.ConeGeometry(2.05, 0.9, 24), mat('#0284c7'));
+      c3.position.set(4.5, 6.65, 11); g.add(c3);
+
+      box(12, 0.12, 0.6, '#475569', 10, 5.8, 10, g, false);
+      box(0.2, 5.8, 0.2, '#64748b', 15, 2.9, 6.2, g, false);
+      box(0.2, 5.8, 0.2, '#64748b', 9.5, 2.9, 7.5, g, false);
+
+      // Cooling Tower
+      cyl(2.4, 3.1, 4.6, '#64748b', -16, 2.3, 10, g, 20);
+      cyl(2.2, 2.2, 0.35, '#1e293b', -16, 4.7, 10, g, 20);
+      cyl(0.25, 0.25, 1.2, '#e2e8f0', -16, 5.4, 10, g);
+
+      // Substation
+      box(4.5, 1.8, 3.5, '#475569', -8, 0.9, 12, g);
+      for (let b = 0; b < 3; b++) cyl(0.35, 0.35, 1.2, '#94a3b8', -9.2 + b * 1.2, 2.2, 12, g, 12);
+      box(6.2, 1.4, 0.12, '#64748b', -8, 0.7, 14.5, g, false);
+
+      // Loading bay with rollup door
+      box(5.5, 4.2, 0.2, '#f8fafc', -6, 2.1, 9.1, g);
+      box(4.5, 3.4, 0.1, '#cbd5e1', -6, 1.7, 9.2, g);
+      for (let r = 0; r < 7; r++) box(4.4, 0.05, 0.12, '#94a3b8', -6, 0.4 + r * 0.45, 9.22, g, false);
+      box(4.8, 0.3, 1.2, '#ea580c', -6, 3.9, 9.6, g);
+
+      // Stacked Containers & Yard Truck
+      const yardTk = makeTruck({ name: 'Titan Logistics', stripe: '#ea580c', cab: '#ea580c', from: 'Industrial Port' }, false);
+      yardTk.position.set(14, 0, 11);
+      yardTk.rotation.y = Math.PI;
+      g.add(yardTk);
+
+      const yardCtr = (x, z, col, ry) => {
+        const cg = new THREE.Group(); cg.position.set(x, 0, z); cg.rotation.y = ry || 0; g.add(cg);
+        box(6, 2.5, 2.4, col, 0, 1.25, 0, cg);
+        for (let k = -2.7; k <= 2.71; k += 0.45) box(0.07, 2.3, 2.46, '#1e293b', k, 1.25, 0, cg, false);
+      };
+      yardCtr(-18, 2, '#0284c7', 0.1);
+      yardCtr(-18, 2, '#ea580c', 0.1);
+      yardCtr(-18, -1, '#16a34a', 0);
+
+      // Main Facade Billboard
+      const factTex = canvasTex(1024, 160, (ctx, W, H) => {
+        ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = '#ea580c'; ctx.fillRect(0, 0, 24, H); ctx.fillRect(W - 24, 0, 24, H);
+        ctx.font = '800 68px "Bricolage Grotesque", sans-serif'; ctx.fillStyle = '#f8fafc'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('TITAN HEAVY INDUSTRIES', W / 2, H / 2 - 8);
+        ctx.font = '700 28px "JetBrains Mono", monospace'; ctx.fillStyle = '#f59e0b';
+        ctx.fillText('PLANT 01 · ADVANCED FABRICATION & SYNTHESIS', W / 2, H / 2 + 42);
+      });
+      plane(factTex, 14, 2.2, g, -6, 7.8, 9.2);
+
+      const selObj = { kind: 'factory', name: 'Titan Heavy Industries', code: 'PLANT-01', type: 'Industrial Manufacturing Complex', cx, cz };
+      g.userData.sel = selObj;
+      town.objs.set('landmark:factory', g);
+      return g;
+    }
+
+    function makeMall1(cx, cz) {
+      const g = new THREE.Group(); g.position.set(cx, 0, cz); townStatic.add(g);
+      // Plaza foundation
+      box(48, 0.08, 38, '#e2e8f0', 0, 0.04, 0, g, false);
+      box(49.2, 0.16, 39.2, '#cbd5e1', 0, 0.08, 0, g, false);
+      box(36, 0.09, 12, '#cbd5e1', 0, 0.045, 12, g, false);
+
+      // Main Central Atrium
+      box(22, 7.6, 20, '#f8fafc', 0, 3.8, -2, g);
+      box(22.4, 0.35, 20.4, '#2563eb', 0, 7.7, -2, g);
+
+      // Large barrel-vault glass skylight
+      const skyGeo = new THREE.CylinderGeometry(6.2, 6.2, 18, 24, 1, false, 0, Math.PI);
+      const skyMat = new THREE.MeshStandardMaterial({ color: '#7dd3fc', roughness: 0.15, metalness: 0.1, transparent: true, opacity: 0.85 });
+      const skylight = new THREE.Mesh(skyGeo, skyMat);
+      skylight.rotation.z = Math.PI / 2;
+      skylight.rotation.y = Math.PI / 2;
+      skylight.position.set(0, 7.8, -2);
+      g.add(skylight);
+
+      for (let s = -8; s <= 8; s += 2) {
+        box(0.2, 1.6, 12.6, '#1e293b', s, 8.4, -2, g, false);
+      }
+
+      // East Wing (Fashion & Department Stores)
+      box(12, 5.6, 16, '#f1f5f9', 16, 2.8, -3, g);
+      box(12.3, 0.3, 16.3, '#3b82f6', 16, 5.7, -3, g);
+      box(6, 1.8, 0.1, '#0284c7', 16, 4.2, 5.15, g);
+      plane(txtTex('FASHION', '#2563eb', '#ffffff', 512, 128, 56), 4.2, 1.0, g, 16, 4.2, 5.25);
+
+      // West Wing (Tech & Lifestyle)
+      box(12, 5.6, 16, '#f1f5f9', -16, 2.8, -3, g);
+      box(12.3, 0.3, 16.3, '#3b82f6', -16, 5.7, -3, g);
+      box(6, 1.8, 0.1, '#0284c7', -16, 4.2, 5.15, g);
+      plane(txtTex('TECH HUB', '#2563eb', '#ffffff', 512, 128, 56), 4.2, 1.0, g, -16, 4.2, 5.25);
+
+      // Grand Entrance Canopy
+      box(16, 0.35, 6, '#1d4ed8', 0, 4.8, 10, g);
+      [-7, 7].forEach(bx => {
+        cyl(0.35, 0.35, 4.8, '#cbd5e1', bx, 2.4, 12.5, g, 14);
+        cyl(0.35, 0.35, 4.8, '#cbd5e1', bx, 2.4, 7.5, g, 14);
+      });
+
+      // Fountain Plaza
+      cyl(3.8, 4.4, 0.45, '#94a3b8', 0, 0.22, 13, g, 24);
+      cyl(3.4, 3.4, 0.35, '#38bdf8', 0, 0.28, 13, g, 24);
+      cyl(0.7, 0.9, 0.9, '#cbd5e1', 0, 0.55, 13, g, 16);
+      cyl(0.2, 0.4, 1.6, '#e0f2fe', 0, 1.6, 13, g, 12);
+
+      // Decorative benches and planters
+      [-8, 8].forEach(bx => {
+        box(3.2, 0.5, 0.8, '#78350f', bx, 0.35, 13, g);
+        box(3.2, 0.8, 0.15, '#78350f', bx, 0.7, 12.6, g);
+        box(2.8, 0.6, 1.4, '#e2e8f0', bx, 0.3, 9, g);
+        ball(0.9, '#15803d', bx, 0.9, 9, g);
+      });
+
+      // Mall Facade Billboard
+      const mall1Tex = canvasTex(1024, 160, (ctx, W, H) => {
+        ctx.fillStyle = '#1e3a8a'; ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = '#38bdf8'; ctx.fillRect(0, 0, 20, H); ctx.fillRect(W - 20, 0, 20, H);
+        ctx.font = '800 66px "Bricolage Grotesque", sans-serif'; ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('GRAND PLAZA MALL', W / 2, H / 2 - 8);
+        ctx.font = '700 26px Figtree, sans-serif'; ctx.fillStyle = '#93c5fd';
+        ctx.fillText('SHOPPING · DINING · ENTERTAINMENT', W / 2, H / 2 + 40);
+      });
+      plane(mall1Tex, 13, 2.0, g, 0, 6.4, 8.1);
+
+      // Pylon Monument
+      box(0.5, 7.8, 1.6, '#1e3a8a', 20, 3.9, 14.5, g);
+      plane(txtTex('PLAZA', '#2563eb', '#ffffff', 512, 128, 48), 2.2, 0.7, g, 19.7, 6.5, 14.5, 0, -Math.PI / 2);
+
+      const selObj = { kind: 'mall', name: 'Grand Plaza Mall', code: 'MALL-01', type: 'Lifestyle & Retail Center', cx, cz };
+      g.userData.sel = selObj;
+      town.objs.set('landmark:mall1', g);
+      return g;
+    }
+
+    function makeMall2(cx, cz) {
+      const g = new THREE.Group(); g.position.set(cx, 0, cz); townStatic.add(g);
+      // Luxury Pavilion foundation
+      box(48, 0.08, 40, '#f1f5f9', 0, 0.04, 0, g, false);
+      box(49.2, 0.16, 41.2, '#cbd5e1', 0, 0.08, 0, g, false);
+      box(34, 0.09, 12, '#e2e8f0', 0, 0.045, 12, g, false);
+
+      // Stepped Contemporary Luxury Architecture
+      box(28, 5.2, 22, '#fdfbf7', 0, 2.6, -3, g);
+      box(22, 4.0, 16, '#fdfbf7', 0, 7.2, -3, g);
+      box(28.4, 0.35, 22.4, '#d97706', 0, 5.3, -3, g);
+      box(22.4, 0.35, 16.4, '#d97706', 0, 9.3, -3, g);
+
+      // Angled Glass Prism Skylight
+      const prismMesh = new THREE.Mesh(coneGeo(7.5, 3.8, 4), mat('#34d399', { roughness: 0.2, metalness: 0.15, transparent: true, opacity: 0.85 }));
+      prismMesh.rotation.y = Math.PI / 4;
+      prismMesh.position.set(0, 11.2, -3);
+      g.add(prismMesh);
+
+      // Dining Terrace & Bistro Area
+      box(14, 0.12, 10, '#fef3c7', 12, 0.1, 10, g, false);
+      const makeCafeTable = (tx, tz, umbrellaCol) => {
+        cyl(0.08, 0.08, 1.1, '#78350f', tx, 0.55, tz, g);
+        cyl(0.75, 0.75, 0.06, '#ffffff', tx, 1.1, tz, g);
+        cyl(0.06, 0.06, 2.6, '#475569', tx, 1.3, tz, g);
+        const umb = new THREE.Mesh(coneGeo(1.6, 0.7, 8), mat(umbrellaCol));
+        umb.position.set(tx, 2.6, tz); g.add(umb);
+        [-0.6, 0.6].forEach(dx => box(0.35, 0.45, 0.35, '#78350f', tx + dx, 0.25, tz, g));
+      };
+      makeCafeTable(8, 7, '#ef4444');
+      makeCafeTable(13, 7, '#3b82f6');
+      makeCafeTable(8, 12, '#f59e0b');
+      makeCafeTable(13, 12, '#10b981');
+
+      // IMAX & Cinema Entertainment Cube
+      box(10, 7.5, 12, '#1e1b4b', -14, 3.75, -5, g);
+      box(10.3, 0.3, 12.3, '#d97706', -14, 7.6, -5, g);
+      plane(txtTex('CRYSTAL IMAX', '#312e81', '#ffffff', 512, 128, 52), 4.4, 1.1, g, -14, 5.8, 1.15);
+
+      // Galleria Entrance Archway
+      box(12, 5.2, 2.5, '#f59e0b', -2, 2.6, 8.5, g);
+      box(7.5, 3.8, 3.0, '#0f172a', -2, 1.9, 8.5, g);
+      box(7.2, 3.6, 0.2, '#6ee7b7', -2, 1.8, 8.5, g);
+
+      // Galleria Facade Billboard
+      const mall2Tex = canvasTex(1024, 160, (ctx, W, H) => {
+        ctx.fillStyle = '#78350f'; ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = '#f59e0b'; ctx.fillRect(0, 0, 20, H); ctx.fillRect(W - 20, 0, 20, H);
+        ctx.font = '800 64px "Bricolage Grotesque", sans-serif'; ctx.fillStyle = '#fffbeb'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('CRYSTAL GALLERIA', W / 2, H / 2 - 8);
+        ctx.font = '700 26px "JetBrains Mono", monospace'; ctx.fillStyle = '#fde68a';
+        ctx.fillText('LUXURY BRANDS · CINEMA · FINE DINING', W / 2, H / 2 + 40);
+      });
+      plane(mall2Tex, 8.4, 1.4, g, -2, 7.2, 9.2);
+
+      [-9, 5].forEach(bx => {
+        box(3.2, 0.55, 1.2, '#cbd5e1', bx, 0.28, 11.5, g);
+        box(3.0, 0.4, 1.0, '#22c55e', bx, 0.6, 11.5, g);
+      });
+
+      // Pylon Monument
+      box(0.5, 7.8, 1.6, '#78350f', -20, 3.9, 14.5, g);
+      plane(txtTex('GALLERIA', '#d97706', '#ffffff', 512, 128, 48), 2.2, 0.7, g, -19.7, 6.5, 14.5, 0, Math.PI / 2);
+
+      const selObj = { kind: 'mall', name: 'Crystal Galleria Mall', code: 'MALL-02', type: 'Luxury Shopping Galleria', cx, cz };
+      g.userData.sel = selObj;
+      town.objs.set('landmark:mall2', g);
+      return g;
+    }
     function buildStatic() {
       while (townStatic.children.length) townStatic.remove(townStatic.children[0]);
       const ground = new THREE.Mesh(new THREE.PlaneGeometry(2600, 2600), mat('#e8ebf6')); ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; townStatic.add(ground);
@@ -1128,6 +1395,24 @@
         });
         const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthTest: false, transparent: true })); sp.renderOrder = 12; sp.position.set(st.k * SLICE_W - 10, 16, 0); sp.visible = false; env.add(sp); town.pins.push(sp);
       });
+
+      // 1 Factory in the Front (in front of WH 1), 2 Malls in the Back (behind WH 2 & WH 3)
+      makeFactory(0, 78);
+      makeMall1(-96, -50);
+      makeMall2(96, -50);
+
+      const makeLandmarkPin = (code, name, accent, px, py, pz) => {
+        const tex = canvasTex(640, 140, (g, W, H) => {
+          g.fillStyle = 'rgba(255,255,255,.96)'; const r = 34; g.beginPath(); g.moveTo(r, 8); g.arcTo(W - 8, 8, W - 8, H - 8, r); g.arcTo(W - 8, H - 8, 8, H - 8, r); g.arcTo(8, H - 8, 8, 8, r); g.arcTo(8, 8, W - 8, 8, r); g.fill();
+          g.fillStyle = accent; g.beginPath(); g.moveTo(52, 26); g.arcTo(196, 26, 196, 114, 16); g.arcTo(196, 114, 30, 114, 16); g.arcTo(30, 114, 30, 26, 16); g.arcTo(30, 26, 196, 26, 16); g.fill();
+          g.fillStyle = '#fff'; g.font = '800 38px "JetBrains Mono", monospace'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(code, 113, 72);
+          g.fillStyle = '#1b2638'; g.textAlign = 'left'; g.font = '800 48px "Bricolage Grotesque", Figtree, sans-serif'; g.fillText(name.length > 17 ? name.slice(0, 16) + '…' : name, 222, 74);
+        });
+        const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthTest: false, transparent: true })); sp.renderOrder = 12; sp.position.set(px, py, pz); sp.visible = false; env.add(sp); town.pins.push(sp);
+      };
+      makeLandmarkPin('PLANT', 'Titan Factory', '#ea580c', 0, 18, 78);
+      makeLandmarkPin('MALL 1', 'Grand Plaza', '#2563eb', -96, 18, -50);
+      makeLandmarkPin('MALL 2', 'Crystal Galleria', '#d97706', 96, 18, -50);
       buildUnit7();
     }
     function buildUnit7() {
@@ -2778,7 +3063,7 @@
       g.userData.head = [head, tip, dot]; return g;
     }
     const brk = new THREE.Group(); brk.visible = false; scene.add(brk);
-    const BRK_DIM = { dest: [7.2, 4.6, 7.2, 0], van: [3.4, 2.1, 1.6, -0.3], tk: [11, 4.2, 2.9, 0], fl: [2.8, 2.7, 1.5, 0.2], lfl: [2.8, 2.7, 1.5, 0.2], lbay: [1.2, 4.8, 4.2, 0], site: [21.6, 7.6, 27.6, 0], bay: [1.2, 4.8, 4.2, 0], chg: [1.5, 1.4, 1.6, 0], pal: [1.4, 1.5, 1.4, 0] };
+    const BRK_DIM = { dest: [7.2, 4.6, 7.2, 0], van: [3.4, 2.1, 1.6, -0.3], tk: [11, 4.2, 2.9, 0], fl: [2.8, 2.7, 1.5, 0.2], lfl: [2.8, 2.7, 1.5, 0.2], lbay: [1.2, 4.8, 4.2, 0], site: [21.6, 7.6, 27.6, 0], bay: [1.2, 4.8, 4.2, 0], chg: [1.5, 1.4, 1.6, 0], pal: [1.4, 1.5, 1.4, 0], factory: [48, 18, 38, 0], mall: [48, 12, 40, 0] };
     function bracketGeo(w, h, d) {
       const pts = [], e = Math.min(w, h, d) * 0.28 + 0.18;
       for (const x of [-w / 2, w / 2]) for (const y of [0, h]) for (const z of [-d / 2, d / 2]) { const sx = x < 0 ? 1 : -1, sy = y === 0 ? 1 : -1, sz = z < 0 ? 1 : -1; pts.push(x, y, z, x + sx * e, y, z, x, y, z, x, y + sy * e, z, x, y, z, x, y, z + sz * e); }
@@ -2820,6 +3105,7 @@
       if (s.kind === 'site') { const L = lites.get(s.idx); return { x: -10 + (L ? L.ox : 0), y: 0, z: 0, yaw: 0, h: 8.5 }; }
       if (s.kind === 'chg') return { x: s.x + OX, y: 0, z: s.z, yaw: 0, h: 1.9 };
       if (s.kind === 'pal') { const v = s.g.getWorldPosition(new THREE.Vector3()); return { x: v.x, y: v.y, z: v.z, yaw: 0, h: 1.7 }; }
+      if (s.kind === 'factory' || s.kind === 'mall') return { x: s.cx, y: 0, z: s.cz, yaw: 0, h: 9.5 };
       return null;
     }
     function chgUser(c) { return forklifts.find(f => f.home === HOMES[c.i]); }
@@ -2840,6 +3126,7 @@
       if (s.kind === 'site') return esc(SITES[s.idx].code) + '<small>' + esc(SITES[s.idx].name) + '</small>';
       if (s.kind === 'chg') return 'C' + (s.i + 1) + '<small>' + (chgActive(s) ? 'Charging' : 'Free') + '</small>';
       if (s.kind === 'pal') return esc(s.g.userData.meta.id) + '<small>' + esc((SKUS[s.g.userData.sku] || {}).name || s.g.userData.sku) + '</small>';
+      if (s.kind === 'factory' || s.kind === 'mall') return esc(s.name) + '<small>' + esc(s.type) + '</small>';
       return '';
     }
     function insHead(eyebrow, title, sub, icon, follow) {
@@ -2962,6 +3249,14 @@
         h += insHead('PALLET · ' + SKU_CAT[k], SKUS[k].name, m.id + ' · ' + SKUS[k].code, ICON.box, false);
         h += istat(w.st, w.cls, w.loc);
         h += '<div class="irows">' + irow('Quantity', fmtN(u) + ' units') + irow('Gross weight', fmtN(u * UNIT_KG[k] + 25) + ' kg') + irow('Location', esc(w.loc)) + irow('Lot', m.lot) + irow('Received', fmtT(m.recv)) + irow('Site', esc(site.name)) + '</div>';
+      } else if (s.kind === 'factory') {
+        h += insHead('INDUSTRIAL COMPLEX · PLANT', s.name, s.type, ICON.star, false);
+        h += istat('Operational', 'ok', 'Heavy manufacturing & chemical synthesis');
+        h += '<div class="irows">' + irow('Facility Code', s.code) + irow('Sector', 'Industrial Heavy Manufacturing') + irow('Output', 'Structural Components & Refined Alloys') + irow('Location', 'Front of Warehouse 1 (South)') + irow('Logistics', 'Dedicated Rail & Heavy Truck Staging') + '</div>';
+      } else if (s.kind === 'mall') {
+        h += insHead('COMMERCIAL COMPLEX · RETAIL', s.name, s.type, ICON.star, false);
+        h += istat('Open to Public', 'ok', s.name.includes('Crystal') ? 'Luxury boutiques & cinema center' : 'Department stores & dining pavilion');
+        h += '<div class="irows">' + irow('Facility Code', s.code) + irow('Sector', 'Retail & Lifestyle Center') + irow('Wings', s.name.includes('Crystal') ? 'Galleria Promenade, IMAX, Dining Terrace' : 'Fashion Promenade, Tech Plaza, Food Hall') + irow('Location', s.name.includes('Crystal') ? 'Behind Warehouse 3 (North)' : 'Behind Warehouse 2 (North)') + irow('Foot Traffic', '12,500 daily visitors') + '</div>';
       }
       el.innerHTML = h;
     }
@@ -3072,7 +3367,7 @@
           const upp = (cam.top - cam.bottom) / view.zoom / innerHeight;
           const rx = Math.cos(view.az), rz = -Math.sin(view.az), fx = -Math.sin(view.az), fz = -Math.cos(view.az);
           const k = dy * upp / Math.sin(EL);
-          view.targetT.x = clamp(view.targetT.x - rx * dx * upp + fx * k, -250, 260); view.targetT.z = clamp(view.targetT.z - rz * dx * upp + fz * k, -130, 140); game.fly = null;
+          view.targetT.x = clamp(view.targetT.x - rx * dx * upp + fx * k, -260, 260); view.targetT.z = clamp(view.targetT.z - rz * dx * upp + fz * k, -120, 140); game.fly = null;
           view.target.copy(view.targetT);
         }
       } else if (e.pointerType === 'mouse') { if (game.town) { townHoverT = tileAtScreen(e.clientX, e.clientY); el.classList.add('hover'); } else hoverAt(e.clientX, e.clientY); }
@@ -3084,6 +3379,21 @@
         const now = performance.now();
         if (lastTap && (now - lastTap.t < 380) && Math.hypot(e.clientX - lastTap.x, e.clientY - lastTap.y) < 30) {
           lastTap = null;
+          setRay(e.clientX, e.clientY);
+          const lmObjs = ['landmark:factory', 'landmark:mall1', 'landmark:mall2'].map(k => town.objs.get(k)).filter(Boolean);
+          const lmHit = ray.intersectObjects(lmObjs, true).find(h => !h.object.isSprite);
+          if (lmHit) {
+            let o = lmHit.object; while (o && !o.userData.sel) o = o.parent;
+            if (o && o.userData.sel) {
+              const s = o.userData.sel;
+              select(s);
+              view.targetT.set(s.cx, 0, s.cz);
+              view.zoomT = 0.95;
+              dirty = true;
+              toast('ok', s.name, s.type, ICON.star);
+              return;
+            }
+          }
           const sIdx = findWarehouseAtScreen(e.clientX, e.clientY);
           if (sIdx >= 0) {
             openWarehouseInside(sIdx);
@@ -3120,23 +3430,42 @@
             if (curr === world) return game.siteIdx;
             curr = curr.parent;
           }
-          const ptX = hit.point.x;
-          const k = clamp(Math.round((ptX - 2) / SLICE_W), -2, 2);
-          const sIdx = SITES.findIndex(s => s.k === k);
-          if (sIdx >= 0) return sIdx;
+          const ptX = hit.point.x, ptZ = hit.point.z;
+          if (ptX >= -240 && ptX <= 240 && ptZ >= -20 && ptZ <= 22) {
+            const k = clamp(Math.round((ptX - 2) / SLICE_W), -2, 2);
+            const sIdx = SITES.findIndex(s => s.k === k);
+            if (sIdx >= 0) return sIdx;
+          }
         }
       }
       const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
       const pt = new THREE.Vector3();
       if (ray.ray.intersectPlane(plane, pt)) {
-        const k = clamp(Math.round((pt.x - 2) / SLICE_W), -2, 2);
-        const sIdx = SITES.findIndex(s => s.k === k);
-        if (sIdx >= 0) return sIdx;
+        if (pt.x >= -240 && pt.x <= 240 && pt.z >= -20 && pt.z <= 22) {
+          const k = clamp(Math.round((pt.x - 2) / SLICE_W), -2, 2);
+          const sIdx = SITES.findIndex(s => s.k === k);
+          if (sIdx >= 0) return sIdx;
+        }
       }
-      return viewIdx();
+      return -1;
     }
     function onDblClick(e) {
       e.preventDefault();
+      setRay(e.clientX, e.clientY);
+      const lmObjs = ['landmark:factory', 'landmark:mall1', 'landmark:mall2'].map(k => town.objs.get(k)).filter(Boolean);
+      const lmHit = ray.intersectObjects(lmObjs, true).find(h => !h.object.isSprite);
+      if (lmHit) {
+        let o = lmHit.object; while (o && !o.userData.sel) o = o.parent;
+        if (o && o.userData.sel) {
+          const s = o.userData.sel;
+          select(s);
+          view.targetT.set(s.cx, 0, s.cz);
+          view.zoomT = 0.95;
+          dirty = true;
+          toast('ok', s.name, s.type, ICON.star);
+          return;
+        }
+      }
       const sIdx = findWarehouseAtScreen(e.clientX, e.clientY);
       if (sIdx >= 0) {
         openWarehouseInside(sIdx);
@@ -3658,6 +3987,20 @@
     });
     q.addEventListener('keydown', e => {
       if (e.key !== 'Enter') return; const v = q.value.trim().toUpperCase(); if (!v) return;
+      if (v.includes('FACTORY') || v.includes('TITAN') || v.includes('PLANT')) {
+        const f = town.objs.get('landmark:factory');
+        if (f && f.userData.sel) { select(f.userData.sel); view.targetT.set(f.userData.sel.cx, 0, f.userData.sel.cz); view.zoomT = 0.95; dirty = true; toast('ok', f.userData.sel.name, f.userData.sel.type, ICON.star); q.value = ''; return; }
+      }
+      if (v.includes('MALL 2') || v.includes('CRYSTAL') || v.includes('GALLERIA')) {
+        const m2 = town.objs.get('landmark:mall2');
+        if (m2 && m2.userData.sel) { select(m2.userData.sel); view.targetT.set(m2.userData.sel.cx, 0, m2.userData.sel.cz); view.zoomT = 0.95; dirty = true; toast('ok', m2.userData.sel.name, m2.userData.sel.type, ICON.star); q.value = ''; return; }
+      }
+      if (v.includes('MALL') || v.includes('GRAND') || v.includes('PLAZA')) {
+        const m1 = town.objs.get('landmark:mall1');
+        if (m1 && m1.userData.sel) { select(m1.userData.sel); view.targetT.set(m1.userData.sel.cx, 0, m1.userData.sel.cz); view.zoomT = 0.95; dirty = true; toast('ok', m1.userData.sel.name, m1.userData.sel.type, ICON.star); q.value = ''; return; }
+      }
+      const sMatch = SITES.findIndex(s => s.name.toUpperCase().includes(v) || s.code.includes(v));
+      if (sMatch >= 0) { openWarehouseInside(sMatch); q.value = ''; return; }
       const o = [...trucks, ...forklifts].find(x => x.id.includes(v) || (x.car && x.car.name.toUpperCase().includes(v)));
       if (o) { select(o); focusOn(o); q.value = ''; return; }
       if (sim.orders.some(x => x.id.includes(v))) { setTab('ord'); q.value = ''; return; }
