@@ -299,13 +299,20 @@
 
       /* ---------------- data ---------------- */
       const SKUS = {
-        LED: { name: 'LED Panel 60×60', code: 'LED-6060', color: '#d8a66a', units: 48, h: .85, pop: 2 },
-        CHR: { name: 'Office Chair', code: 'CHR-OF2', color: '#b98455', units: 16, h: 1.05, pop: 1 },
-        BOX: { name: 'Cardboard Box (M)', code: 'BOX-M40', color: '#e6c088', units: 250, h: .72, pop: 3 },
-        GLV: { name: 'Nitrile Gloves', code: 'GLV-NT9', color: '#5b80e8', units: 600, h: .7, pop: 3 },
-        BRK: { name: 'Shelf Bracket', code: 'BRK-S12', color: '#a3afc0', units: 320, h: .55, pop: 2 },
+        WOOD: { name: 'Wood', code: 'WOOD-01', color: '#ff7800', units: 120, h: .85, pop: 3 },
+        GOLD: { name: 'Gold', code: 'GOLD-02', color: '#ff7800', units: 50, h: .72, pop: 3 },
+        COPR: { name: 'Copper', code: 'COPR-03', color: '#ff7800', units: 80, h: .75, pop: 3 },
+        TOYS: { name: 'Toys', code: 'TOYS-04', color: '#ff7800', units: 200, h: .80, pop: 3 },
+        SOLR: { name: 'Solar Panels', code: 'SOLR-05', color: '#ff7800', units: 64, h: .85, pop: 3 },
       };
       const SKU_KEYS = Object.keys(SKUS);
+      function siteSku(idx) {
+        if (idx !== undefined && idx !== null) {
+          const s = typeof idx === 'number' ? SITES[idx] : idx;
+          if (s && s.sku) return s.sku;
+        }
+        return (site && site.sku) ? site.sku : 'WOOD';
+      }
       const CARRIERS = [
         { name: 'Nordline', tag: 'Northbound & beyond', stripe: '#25a69a', from: 'Albany, NY' },
         { name: 'Bluepeak', tag: 'Freight from the peak', stripe: '#2c4bb3', from: 'Scranton, PA' },
@@ -315,29 +322,29 @@
       ];
       const SITES = [
         {
-          code: 'WH-01', name: 'Warehouse 1', k: 0, type: 'dc', addr: '480 Northgate Blvd, Newark NJ', accent: '#3a5fd8', floor: '#f4f7fb',
+          code: 'WH-01', name: 'Warehouse 1', sku: 'WOOD', k: 0, type: 'dc', addr: '480 Northgate Blvd, Newark NJ', accent: '#3a5fd8', floor: '#f4f7fb',
           bays: 4, rows: 4, forklifts: 3, seed: 35, orderRate: [12, 17], truckRate: [50, 70], eventRate: [60, 95], orderSla: 55, diff: 1, dailyTarget: 380,
-          goals: { recv: 28, ship: 22, ontime: 85 }, blurb: 'Steady inbound and a patient crew. Learn how docks, racks and orders fit together.'
+          goals: { recv: 28, ship: 22, ontime: 85 }, blurb: 'Steady inbound and a patient crew. Dedicated storage and fulfillment center for Wood.'
         },
         {
-          code: 'WH-02', name: 'Warehouse 2', k: -1, type: 'depot', addr: '77 River Road, Paterson NJ', accent: '#2f8fd8', floor: '#f3f7fc',
+          code: 'WH-02', name: 'Warehouse 2', sku: 'GOLD', k: -1, type: 'depot', addr: '77 River Road, Paterson NJ', accent: '#2f8fd8', floor: '#f3f7fc',
           bays: 2, rows: 3, forklifts: 3, seed: 28, orderRate: [15, 20], truckRate: [80, 105], eventRate: [70, 100], orderSla: 60, diff: 1, dailyTarget: 300,
-          goals: { recv: 18, ship: 18, ontime: 85 }, blurb: 'A small two-door depot by the river. Fewer trucks, but only two docks to share.'
+          goals: { recv: 18, ship: 18, ontime: 85 }, blurb: 'A small two-door riverfront depot. High-security storage exclusively for Gold.'
         },
         {
-          code: 'WH-03', name: 'Warehouse 3', k: 1, type: 'cold', addr: '12 Pier Road, Elizabeth NJ', accent: '#1f8f86', floor: '#f2f7f6',
+          code: 'WH-03', name: 'Warehouse 3', sku: 'COPR', k: 1, type: 'cold', addr: '12 Pier Road, Elizabeth NJ', accent: '#1f8f86', floor: '#f2f7f6',
           bays: 5, rows: 3, forklifts: 3, seed: 30, orderRate: [13, 18], truckRate: [42, 58], eventRate: [50, 80], orderSla: 50, diff: 2, dailyTarget: 420,
-          goals: { recv: 36, ship: 22, ontime: 85 }, blurb: 'Chilled port overflow site. Five docks and a long truck queue, but only three rack rows.'
+          goals: { recv: 36, ship: 22, ontime: 85 }, blurb: 'Chilled port overflow site with five docks. Dedicated staging and handling for Copper.'
         },
         {
-          code: 'WH-04', name: 'Warehouse 4', k: -2, type: 'cross', addr: '301 Southfield Ave, Edison NJ', accent: '#e0664f', floor: '#fbf5f3',
+          code: 'WH-04', name: 'Warehouse 4', sku: 'TOYS', k: -2, type: 'cross', addr: '301 Southfield Ave, Edison NJ', accent: '#e0664f', floor: '#fbf5f3',
           bays: 5, rows: 3, forklifts: 4, seed: 26, orderRate: [11, 15], truckRate: [34, 46], eventRate: [48, 76], orderSla: 45, diff: 3, dailyTarget: 440,
-          goals: { recv: 40, ship: 26, ontime: 85 }, blurb: 'Freight flows straight through. Five docks, constant trucks and very little rack space.'
+          goals: { recv: 40, ship: 26, ontime: 85 }, blurb: 'Fast-paced distribution cross-dock. High turnaround center dedicated to Toys.'
         },
         {
-          code: 'WH-05', name: 'Warehouse 5', k: 2, type: 'robot', addr: '9 Summit Pkwy, Allentown PA', accent: '#6a4fd0', floor: '#f4f4fb',
+          code: 'WH-05', name: 'Warehouse 5', sku: 'SOLR', k: 2, type: 'robot', addr: '9 Summit Pkwy, Allentown PA', accent: '#6a4fd0', floor: '#f4f4fb',
           bays: 3, rows: 4, forklifts: 3, seed: 44, orderRate: [10, 13], truckRate: [75, 100], eventRate: [38, 62], orderSla: 45, diff: 3, dailyTarget: 320,
-          goals: { recv: 20, ship: 32, ontime: 85 }, blurb: 'Automated e-commerce hub. Few docks, a flood of orders and more things going wrong.'
+          goals: { recv: 20, ship: 32, ontime: 85 }, blurb: 'Automated robotics e-commerce hub. Specialized fulfillment center for Solar Panels.'
         },
       ];
       const SITE_INITIAL_TRUCKS = [
@@ -419,11 +426,9 @@
         return {
           v: 2, best: {}, credits: 999999, up: { fl: 0, spd: 0, chg: 0 }, builds: {}, xp: 0, ach: {},
           stats: { shifts: 0, pallets: 0, orders: 0, rush: 0, fixes: 0, builds: 0, threeStars: 0, bestScore: 0 },
-          daily: { last: null, streak: 0, bestStreak: 0, best: {}, cleared: [] }, settings: { sound: true, music: true, vol: 0.7 }, tutorial: false, town: { owned: [], b: {}, unit7: false, bank: 0, names: 0 }, cos: { owned: ['fl-classic', 'van-classic'], fl: 'fl-classic', van: 'van-classic' }, constr: [], simClock: 0
+          daily: { last: null, streak: 0, bestStreak: 0, best: {}, cleared: [] }, settings: { sound: false, music: false, vol: 0 }, tutorial: false, town: { owned: [], b: {}, unit7: false, bank: 0, names: 0 }, cos: { owned: ['fl-classic', 'van-classic'], fl: 'fl-classic', van: 'van-classic' }, constr: [], simClock: 0
         };
       }
-      daily: { last: null, streak: 0, bestStreak: 0, best: { }, cleared: [] }, settings: { sound: false, music: false, vol: 0 }, tutorial: false, town: { owned: [], b: { }, unit7: false, bank: 0, names: 0 }, cos: { owned: ['fl-classic', 'van-classic'], fl: 'fl-classic', van: 'van-classic' }, constr: [], simClock: 0
-    };}
     function loadSave() {
       const d = defaults(); let s = null;
       try { s = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null'); } catch (e) { }
@@ -555,110 +560,21 @@
     function spend(c) { return true; }
     const sla = () => site.orderSla - (game.mods.has('tight') ? 10 : 0);
 
-    /* ---------------- sound (synthesized, no files) ---------------- */
+    /* ---------------- sound (disabled per user request) ---------------- */
     const Snd = {
       ctx: null, master: null, sfx: null, mus: null, next: 0, step: 0, lastPut: 0, noise: null,
-      init() {
-        if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
-        const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
-        try { this.ctx = new AC(); } catch (e) { return; }
-        const c = this.ctx;
-        this.master = c.createGain(); this.master.connect(c.destination);
-        this.sfx = c.createGain(); this.sfx.connect(this.master);
-        this.mus = c.createGain(); this.mus.connect(this.master);
-        const len = c.sampleRate * 0.5, buf = c.createBuffer(1, len, c.sampleRate), d = buf.getChannelData(0);
-        for (let i = 0; i < len; i++)d[i] = Math.random() * 2 - 1; this.noise = buf;
-        this.apply();
-      },
-      apply() { if (!this.ctx) return; this.master.gain.value = save.settings.vol; this.sfx.gain.value = save.settings.sound ? 1 : 0; this.mus.gain.value = save.settings.music ? 0.32 : 0; },
-      tone(f, dur, type, vol, t, slide, dest) {
-        const c = this.ctx; t = t || c.currentTime;
-        const o = c.createOscillator(), g = c.createGain();
-        o.type = type || 'sine'; o.frequency.setValueAtTime(f, t); if (slide) o.frequency.exponentialRampToValueAtTime(slide, t + dur);
-        g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol || .15, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
-        o.connect(g); g.connect(dest || this.sfx); o.start(t); o.stop(t + dur + .05);
-      },
-      play(n, p) {
-        if (!this.ctx || !save.settings.sound || this.ctx.state !== 'running') return;
-        const t = this.ctx.currentTime; p = p || 1;
-        switch (n) {
-          case 'click': this.tone(1500, .035, 'triangle', .05); break;
-          case 'put': if (t - this.lastPut < .08) return; this.lastPut = t; this.tone(520, .09, 'sine', .09); this.tone(780, .08, 'sine', .05, t + .05); break;
-          case 'coin': this.tone(988 * p, .08, 'square', .045); this.tone(1319 * p, .16, 'square', .045, t + .07); break;
-          case 'bad': this.tone(240, .28, 'sawtooth', .05, t, 110); break;
-          case 'alert': [0, .22].forEach(d => { this.tone(740, .11, 'square', .05, t + d); this.tone(554, .13, 'square', .05, t + d + .1); }); break;
-          case 'star': { const f = [784, 988, 1175][p | 0] || 1175; this.tone(f, .7, 'sine', .16); this.tone(f * 2, .5, 'sine', .04); } break;
-          case 'level': [523, 659, 784, 1047, 1319].forEach((f, i) => this.tone(f, .3, 'triangle', .11, t + i * .08)); break;
-          case 'ach': [880, 1109, 1319, 1760].forEach((f, i) => this.tone(f, .4, 'sine', .1, t + i * .06)); break;
-          case 'build': this.tone(150, .2, 'square', .08, t, 60); this.tone(660, .2, 'triangle', .08, t + .12); this.tone(990, .25, 'triangle', .06, t + .2); break;
-          case 'horn': this.tone(220, .32, 'sawtooth', .035); this.tone(277, .32, 'sawtooth', .03); break;
-          case 'lost': this.tone(440, .18, 'triangle', .06, t, 220); break;
-            if (this.ctx) {
-              try { if (this.ctx.state !== 'closed') this.ctx.close(); } catch (e) { }
-              this.ctx = null;
-            }
-        },
-        music(){
-          if (!this.ctx || !save.settings.music || this.ctx.state !== 'running') return;
-          const c = this.ctx;
-          if (this.next < c.currentTime) this.next = c.currentTime + .05;
-          while (this.next < c.currentTime + .25) {
-            if (this.step % 16 === 0) { const want = musicMode(); if (want !== this.mode && (this.step % 64 === 0 || !this.mode || want === 'rush')) this.mode = want; }
-            const S = SONGS[this.mode || 'chill']; this.beat(this.step, this.next, S); this.next += 60 / S.bpm / 4; this.step++;
-          }
-        },
-        beat(s, t, S){
-          const c = this.ctx, m = n => 440 * Math.pow(2, (n - 69) / 12), bar = Math.floor(s / 16) % S.ch.length, i = s % 16, ch = S.ch[bar], root = ch[0];
-          const voice = (f, dur, type, vol, cut, att, det) => {
-            const o = c.createOscillator(), g = c.createGain(), fl = c.createBiquadFilter(); o.type = type; o.frequency.value = f; if (det) o.detune.value = det;
-            fl.type = 'lowpass'; fl.frequency.value = cut || 2000; g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(vol, t + (att || .008)); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
-            o.connect(fl); fl.connect(g); g.connect(this.mus); o.start(t); o.stop(t + dur + .05);
-          };
-          const noise = (hp, dur, vol, bp) => {
-            const nb = c.createBufferSource(), g = c.createGain(), f = c.createBiquadFilter(); nb.buffer = this.noise; f.type = bp ? 'bandpass' : 'highpass'; f.frequency.value = hp;
-            g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + dur); nb.connect(f); f.connect(g); g.connect(this.mus); nb.start(t); nb.stop(t + dur + .02);
-          };
-          const kick = v => { const o = c.createOscillator(), g = c.createGain(); o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(42, t + .14); g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.0001, t + .3); o.connect(g); g.connect(this.mus); o.start(t); o.stop(t + .32); };
-          const spb = 60 / S.bpm;
-          if (i === 0) ch.forEach((n, k) => { voice(m(n), spb * 4.2, 'sawtooth', S.pad, S.padCut, spb * 1.2, k % 2 ? 7 : -7); voice(m(n), spb * 4.2, 'triangle', S.pad * .8, 1400, spb, 0); });
-          const bn = S.bass[i]; if (bn != null) voice(m(root - 24 + bn), spb * .45, 'triangle', .11, 700, .005);
-          if (S.arp && i % S.arp === 0) { const seq = S.arpSeq, n = ch[seq[(i / S.arp) % seq.length] % ch.length] + 12 * (1 + Math.floor(seq[(i / S.arp) % seq.length] / ch.length)); voice(m(n), spb * .35, 'square', S.arpVol, S.arpCut, .004); }
-          if (S.kick.includes(i)) kick(S.kickVol);
-          if (S.snare.includes(i)) { noise(1800, .16, S.snVol, true); voice(190, .08, 'triangle', S.snVol * .8, 900, .002); }
-          if (S.hat && i % S.hat === 0) noise(8000, i % 4 === 2 ? .07 : .035, S.hatVol * (i % 4 === 2 ? 1.4 : 1));
-          if (S.lead && i % 2 === 0 && Math.random() < S.lead) { const pent = [0, 3, 5, 7, 10, 12, 15], n = root + 12 + pent[Math.floor(Math.random() * pent.length)]; voice(m(n), spb * .6, 'sine', .05, 3000, .01); }
-        }
-        apply(){ },
-        tone(){ },
-        play(){ },
-        music(){ },
-        beat(){ }
-      };
-      const SONGS = {
-        chill: {
-          bpm: 86, ch: [[60, 64, 67, 71], [57, 60, 64, 67], [53, 57, 60, 64], [55, 59, 62, 65]], pad: .022, padCut: 900, bass: [0, null, null, null, null, null, 7, null, 0, null, null, null, 12, null, null, null],
-          arp: 4, arpSeq: [0, 2, 1, 3], arpVol: .018, arpCut: 1600, kick: [0, 10], kickVol: .10, snare: [], snVol: .02, hat: 4, hatVol: .008, lead: .12
-        },
-        shift: {
-          bpm: 104, ch: [[57, 60, 64, 67], [53, 57, 60, 64], [60, 64, 67, 71], [55, 59, 62, 67]], pad: .016, padCut: 1100, bass: [0, null, 0, null, 12, null, 0, null, 0, null, 7, null, 12, null, 7, null],
-          arp: 2, arpSeq: [0, 1, 2, 3, 4, 2, 1, 3], arpVol: .02, arpCut: 2200, kick: [0, 6, 8], kickVol: .16, snare: [4, 12], snVol: .04, hat: 2, hatVol: .012, lead: .1
-        },
-        rush: {
-          bpm: 122, ch: [[50, 53, 57, 60], [46, 50, 53, 57], [53, 57, 60, 64], [48, 52, 55, 60]], pad: .014, padCut: 1500, bass: [0, 0, 12, 0, 0, 12, 0, 7, 0, 0, 12, 0, 10, 0, 7, 12],
-          arp: 1, arpSeq: [0, 1, 2, 3, 2, 1], arpVol: .016, arpCut: 2800, kick: [0, 4, 8, 12], kickVol: .18, snare: [4, 12], snVol: .05, hat: 1, hatVol: .009, lead: .18
-        },
-      };
-      function musicMode(){
-        if(game.phase !== 'shift')return 'chill';
-    const late = sim.orders.some(o => o.late) || reqs.some(r => r.ttl - r.t < 5) || !!game.incident;
-    return (SHIFT_LEN - sim.sec < 60 || late) ? 'rush' : 'shift';
-}
-    function unlockAudio() { Snd.init(); }
-    addEventListener('pointerdown', unlockAudio, { passive: true });
-    addEventListener('keydown', unlockAudio);
+      init() { },
+      apply() { },
+      tone() { },
+      play() { },
+      music() { },
+      beat() { }
+    };
     const SONGS = {};
     function musicMode() { return 'chill'; }
     function unlockAudio() { }
+    addEventListener('pointerdown', unlockAudio, { passive: true });
+    addEventListener('keydown', unlockAudio);
     document.addEventListener('click', e => { if (e.target.closest('button')) Snd.play('click'); }, true);
 
     /* ---------------- toasts & confetti ---------------- */
@@ -809,7 +725,7 @@
       stripe(-19, z1, -19, z2, 0.12, '#23a26a'); stripe(-7.4, z1, -7.4, z2, 0.12, '#23a26a');
       floorText('OUTBOUND STAGING', -13.2, STAGE_Z + 1.55, 8, 0.9, { color: '#23a26a', size: 70 });
       if (L.rows < 4) {
-        for (let i = 0; i < 6; i++)for (let j = 0; j < 2; j++) { const p = makePallet(pick(['BOX', 'BRK', 'LED'])); p.position.set(-18.2 + i * 1.6, 0.02, 8.6 + j * 1.6); world.add(p); }
+        for (let i = 0; i < 6; i++)for (let j = 0; j < 2; j++) { const p = makePallet(siteSku()); p.position.set(-18.2 + i * 1.6, 0.02, 8.6 + j * 1.6); world.add(p); }
         floorText('BULK FLOOR', -13.6, 11.6, 5, 0.7, { color: '#9aa8bc', size: 70 });
       }
       chargers.length = 0;
@@ -840,7 +756,7 @@
         }
         [z0 - 0.56, z0 + 0.56].forEach(zz => { box(12, 0.1, 0.08, '#f08a3c', (x0 + x1) / 2, 1.47, zz); box(12, 0.1, 0.08, '#f08a3c', (x0 + x1) / 2, 3.05, zz); if (tall) box(12, 0.1, 0.08, '#f08a3c', (x0 + x1) / 2, 4.6, zz); });
       });
-      for (let i = 0; i < 5; i++) { const p = makePallet(pick(['BOX', 'LED', 'BRK'])); p.position.set(-19.2 + i * 1.25, 0.02, -12.4); world.add(p); }
+      for (let i = 0; i < 5; i++) { const p = makePallet(siteSku()); p.position.set(-19.2 + i * 1.25, 0.02, -12.4); world.add(p); }
       [[16.6, -12.4], [16.6, 12.4]].forEach(([x, z]) => { cyl(.08, .1, 4.2, '#8a98ad', x, 2.1, z); box(.6, .12, .3, '#8a98ad', x - .25, 4.2, z); });
       if (L.brk) makeBreakRoom();
       L.decor.forEach(i => makeDecor(DECOR[i]));
@@ -1757,12 +1673,18 @@
     /* ---------------- models ---------------- */
     let palSeq = 1000;
     function makePallet(sku) {
-      const s = SKUS[sku], g = new THREE.Group();
+      const sKey = (sku && SKUS[sku]) ? sku : siteSku();
+      const s = SKUS[sKey];
+      const g = new THREE.Group();
       box(1.1, 0.14, 1.1, '#c99a60', 0, 0.07, 0, g);
-      box(1.0, s.h, 1.0, s.color, 0, 0.14 + s.h / 2, 0, g);
+      const cartonColor = (s && s.color) ? s.color : '#ff7800';
+      box(1.0, s.h, 1.0, cartonColor, 0, 0.14 + s.h / 2, 0, g);
       box(0.22, 0.012, 1.01, '#f1dfb8', 0, 0.146 + s.h, 0, g, false);
       box(0.012, 0.22, 0.32, '#ffffff', 0.506, 0.14 + s.h * 0.6, 0, g, false);
-      g.userData.sku = sku; g.userData.meta = { id: 'PAL-' + (++palSeq), lot: 'L25' + pad(palSeq % 97) + '-' + (100 + palSeq % 900), recv: clockMin() - Math.floor(Math.random() * 240) }; g.userData.sel = { kind: 'pal', g }; return g;
+      g.userData.sku = sKey;
+      g.userData.meta = { id: 'PAL-' + (++palSeq), lot: 'L25' + pad(palSeq % 97) + '-' + (100 + palSeq % 900), recv: clockMin() - Math.floor(Math.random() * 240) };
+      g.userData.sel = { kind: 'pal', g };
+      return g;
     }
     const labelTexCache = {};
     function labelTex(car) {
@@ -1832,13 +1754,14 @@
       for (let i = 0; i < 8; i++) { const st = { x: SLOT_X(i), pallet: null, claimed: false, t: 0, order: null }; st.pin = makePin(1.25); st.pin.position.set(st.x, 0, STAGE_Z); st.pin.visible = false; world.add(st.pin); staging.push(st); }
     }
     const blocked = r => (sim.blocked[r] || 0) > sim.sec;
-    function stockBySku() { const o = {}; SKU_KEYS.forEach(k => o[k] = { pallets: 0, units: 0, free: 0 }); slots.forEach(s => { if (s.pallet) { const k = s.pallet.userData.sku; o[k].pallets++; o[k].units += SKUS[k].units; if (!s.claimed) o[k].free++; } }); return o; }
-    function totalUnits() { let n = 0; slots.forEach(s => { if (s.pallet) n += SKUS[s.pallet.userData.sku].units; }); return n; }
+    function stockBySku() { const o = {}; SKU_KEYS.forEach(k => o[k] = { pallets: 0, units: 0, free: 0 }); slots.forEach(s => { if (s.pallet) { const k = s.pallet.userData.sku; if (o[k]) { o[k].pallets++; o[k].units += (SKUS[k] ? SKUS[k].units : 50); if (!s.claimed) o[k].free++; } } }); return o; }
+    function totalUnits() { let n = 0; slots.forEach(s => { if (s.pallet) n += (SKUS[s.pallet.userData.sku] ? SKUS[s.pallet.userData.sku].units : 50); }); return n; }
     function occupied() { return slots.filter(s => s.pallet).length; }
     function seedRacks() {
-      const n = site.seed, w = { LED: .26, BOX: .24, GLV: .24, BRK: .18 };
+      const n = site.seed;
+      const sku = siteSku();
       const free = slots.filter(s => s.lv < 2).sort(() => RNG() - .5);
-      SKU_KEYS.forEach(k => { const c = k === 'CHR' ? 2 : Math.round(n * w[k]); for (let j = 0; j < c && free.length; j++)placeInSlot(free.pop(), makePallet(k)); });
+      for (let j = 0; j < n && free.length; j++) placeInSlot(free.pop(), makePallet(sku));
     }
     function placeInSlot(s, p) { s.pallet = p; p.position.set(s.x, s.y, s.z); p.rotation.set(0, 0, 0); p.scale.setScalar(1); world.add(p); }
 
@@ -2006,14 +1929,9 @@
       const id = forcedId || ('Truck ' + (sim.truckSeq++));
       const baseCar = pick(CARRIERS);
       const car = Object.assign({}, baseCar, { name: id, tag: (site ? site.name : 'Warehouse') + ' Fleet' });
-      const cargo = [];
-      if (focus) { for (let i = 0; i < 4; i++)cargo.push(focus); cargo.push(pick(SKU_KEYS)); }
-      else {
-        const st = stockBySku(), n = irand(3, 6) + (game.mods.has('heavy') ? 2 : 0);
-        const weights = SKU_KEYS.map(k => ({ k, w: st[k].pallets < 3 ? 4 : st[k].pallets > 10 ? 0.5 : 1 }));
-        const tot = weights.reduce((a, b) => a + b.w, 0);
-        for (let i = 0; i < n; i++) { let r = RNG() * tot; for (const x of weights) { r -= x.w; if (r <= 0) { cargo.push(x.k); break; } } }
-      }
+      const targetSku = focus || siteSku();
+      const n = irand(3, 6) + (game.mods.has('heavy') ? 2 : 0);
+      const cargo = Array(n).fill(targetSku);
       return { id, ship: '#SHP-' + (sim.shipSeq += irand(1, 9)), car, cargo, late, expedite: focus || null };
     }
     function spawnTruck(sh, bay) {
@@ -2054,7 +1972,8 @@
       const P = planner(t);
       P.wait(1.2).mv(15, bay.z).mv(21.6, bay.z - 4.5).mv(21.6, bay.z - 7).act(() => { bay.truck = null; dirty = true; })
         .mv(21.6, 36).act(() => {
-          t.cargo = [pick(SKU_KEYS), pick(SKU_KEYS), pick(SKU_KEYS), pick(SKU_KEYS)];
+          const s = siteSku();
+          t.cargo = [s, s, s, s];
           t.unloaded = 0; t.assigned = 0; t.busyBy = null;
           t.state = 'queued'; t.times.gate = clockMin();
           place(t);
@@ -2074,8 +1993,7 @@
 
     /* ---------------- orders, combo ---------------- */
     function newOrder(rush) {
-      const tot = SKU_KEYS.reduce((a, k) => a + SKUS[k].pop, 0); let r = RNG() * tot, sku = SKU_KEYS[0];
-      for (const k of SKU_KEYS) { r -= SKUS[k].pop; if (r <= 0) { sku = k; break; } }
+      const sku = siteSku();
       return { id: 'ORD-' + (++sim.orderSeq), sku, created: clockMin(), due: clockMin() + (rush ? 25 : sla() + irand(-4, 6)), rush: !!rush, late: false, shop: (() => { const c = customers(); return c.length ? c[Math.floor(RNG() * c.length)] : null; })() };
     }
     function releaseOrder() {
@@ -2261,17 +2179,80 @@
       const bz = Array.from({ length: s.bays }, (_, i) => (i - (s.bays - 1) / 2) * 5);
       box(20, 0.1, 26, s.floor, -10, 0.05, 0, G, false);
       box(24, 0.06, 26, '#eef1f8', 12, 0.03, 0, G, false);
-      // walls and roof
-      const wall = '#eef1f8';
-      box(20.6, 4.8, 0.3, wall, -10, 2.4, -13.15, G); box(20.6, 4.8, 0.3, wall, -10, 2.4, 13.15, G); box(0.3, 4.8, 26.6, '#e3e8f4', -20.15, 2.4, 0, G);
-      box(20.7, 0.3, 0.36, s.accent, -10, 4.75, 13.15, G); box(20.7, 0.3, 0.36, s.accent, -10, 4.75, -13.15, G); box(0.36, 0.3, 26.7, s.accent, 0, 4.75, 0, G);
+      box(24, 0.18, 0.3, '#dde2f0', 12, 0.09, -13.15, G, false);
+      box(24, 0.18, 0.3, '#dde2f0', 12, 0.09, 13.15, G, false);
+      box(0.12, 0.012, 25.2, '#f2c230', -6.25, 0.062, 0, G, false);
+      box(0.12, 0.012, 25.2, '#f2c230', -2.85, 0.062, 0, G, false);
+
+      // permanent back & left walls
+      box(20.6, 4.8, 0.3, '#e9edf7', -10, 2.4, -13.15, G, false);
+      box(20.6, 0.25, 0.34, s.accent, -10, 4.6, -13.15, G, false);
+      box(0.3, 4.8, 26.6, '#e3e8f4', -20.15, 2.4, 0, G, false);
+      box(0.34, 0.25, 26.6, s.accent, -20.15, 4.6, 0, G, false);
+
       const edges = [-13.15, ...bz.flatMap(z => [z - 1.75, z + 1.75]), 13.15];
-      for (let i = 0; i < edges.length; i += 2) { const a = edges[i], b = edges[i + 1]; if (b - a > 0.05) box(0.3, 4.8, b - a, wall, 0, 2.4, (a + b) / 2, G); }
+      for (let i = 0; i < edges.length; i += 2) { const a = edges[i], b = edges[i + 1]; if (b - a > 0.05) box(0.35, 0.9, b - a, '#cdd7e4', 0, 0.45, (a + b) / 2, G, false); }
+
+      // expandable shell group (front wall, dock headers, roof)
       const shellG = new THREE.Group(); G.add(shellG);
-      buildRoof(shellG, s, (c, map) => map ? new THREE.MeshStandardMaterial({ map, color: c, roughness: .8, transparent: true }) : mat(c), false);
+      const shellMats = [];
+      const liteShellMat = (o) => {
+        const m = new THREE.MeshStandardMaterial(Object.assign({ roughness: .8, transparent: true, opacity: 1 }, o));
+        shellMats.push(m);
+        return m;
+      };
+      const wallLM = liteShellMat({ color: '#ffffff' });
+      const trimLM = liteShellMat({ color: s.accent });
+      box(20.6, 4.8, 0.3, wallLM, -10, 2.4, 13.15, shellG);
+      box(20.7, 0.3, 0.36, trimLM, -10, 4.75, 13.15, shellG);
+      for (let i = 0; i < edges.length; i += 2) { const a = edges[i], b = edges[i + 1]; if (b - a > 0.05) box(0.3, 3.9, b - a, wallLM, 0, 2.85, (a + b) / 2, shellG); }
+      bz.forEach(z => box(0.3, 0.42, 3.6, wallLM, 0, 4.62, z, shellG));
+      box(0.36, 0.3, 26.7, trimLM, 0, 4.75, 0, shellG);
+      buildRoof(shellG, s, (c, map) => liteShellMat(map ? { map, color: c } : { color: c }), false);
       siteExtras(G, s);
-      const sel = { kind: 'site', idx }; G.userData.sel = sel;
-      const L = { idx, s, ox, G, sel, bays: [], fls: [], trucks: [], next: 3 + R() * 10, fill: 0.45 + R() * 0.3, done: 0, onTime: 0, late: 0, inbound: 0, R };
+
+      // interior racks and cartons matching this warehouse's designated item
+      const liteRows = [-11, -6, -1, 4].slice(0, s.rows || 3);
+      liteRows.forEach(z0 => {
+        const x0 = -18.95, x1 = -6.95, H = 3.1;
+        for (let k = 0; k <= 8; k++) {
+          const x = x0 + k * 1.5;
+          box(0.11, H, 0.11, '#4d73e0', x, H / 2, z0 - 0.56, G, false);
+          box(0.11, H, 0.11, '#4d73e0', x, H / 2, z0 + 0.56, G, false);
+          box(0.08, 0.08, 1.12, '#4d73e0', x, 0.4, z0, G, false);
+          box(0.08, 0.08, 1.12, '#4d73e0', x, 2.6, z0, G, false);
+        }
+        [z0 - 0.56, z0 + 0.56].forEach(zz => {
+          box(12, 0.1, 0.08, '#f08a3c', (x0 + x1) / 2, 1.47, zz, G, false);
+          box(12, 0.1, 0.08, '#f08a3c', (x0 + x1) / 2, 3.05, zz, G, false);
+        });
+        for (let i = 0; i < 8; i++) {
+          for (let lv = 0; lv < 2; lv++) {
+            if (R() < 0.72) {
+              const p = makePallet(s.sku);
+              p.position.set(SLOT_X(i), LEVEL_Y[lv], z0);
+              G.add(p);
+            }
+          }
+        }
+      });
+      // bulk floor pallets
+      for (let i = 0; i < 5; i++) {
+        for (let j = 0; j < 2; j++) {
+          const p = makePallet(s.sku);
+          p.position.set(-18.2 + i * 1.5, 0.02, 8.6 + j * 1.5);
+          G.add(p);
+        }
+      }
+      // outbound staging floor pallets
+      for (let i = 0; i < 4; i++) {
+        const p = makePallet(s.sku);
+        p.position.set(-17.2 + i * 2.2, 0.02, 5.5);
+        G.add(p);
+      }
+
+      const sel = { kind: 'site', idx }; G.userData.sel = sel; shellG.userData.sel = sel;
+      const L = { idx, s, ox, G, sel, shell: shellG, shellMats, shellOp: 1, bays: [], fls: [], trucks: [], next: 3 + R() * 10, fill: 0.45 + R() * 0.3, done: 0, onTime: 0, late: 0, inbound: 0, R };
       bz.forEach((z, i) => {
         const g = new THREE.Group(); g.position.set(0, 0, z); G.add(g);
         box(0.32, 4.4, 0.32, s.accent, 0, 2.2, -1.75, g); box(0.32, 4.4, 0.32, s.accent, 0, 2.2, 1.75, g); box(0.5, 0.55, 3.82, s.accent, 0, 4.15, 0, g);
@@ -2316,10 +2297,11 @@
       if (selected && (selected.lite === L || (selected.bay && selected.bay.lite === L) || (selected.kind === 'site' && selected.idx === idx))) select(null);
     }
     function setStack(L) {
+      const sku = (L.s && L.s.sku) || siteSku(L.idx);
       L.bays.forEach(b => {
         const t = b.truck, want = !t ? 0 : t.dir === 'out' ? Math.min(3, t.n - t.done) : Math.min(3, t.done);
         while (b.stack.children.length > want) b.stack.remove(b.stack.children[b.stack.children.length - 1]);
-        while (b.stack.children.length < want) { const p = makePallet(pick(SKU_KEYS)); p.position.set(-0.6 + b.stack.children.length * 1.25, 0.02, 0); p.userData.sel = null; b.stack.add(p); }
+        while (b.stack.children.length < want) { const p = makePallet(sku); p.position.set(-0.6 + b.stack.children.length * 1.25, 0.02, 0); p.userData.sel = null; b.stack.add(p); }
         b.pin.visible = !!(t && t.dir === 'out' && want > 0);
       });
     }
@@ -2329,10 +2311,11 @@
       const car = Object.assign({}, baseCar, { name: id, tag: L.s.code + ' Carrier' });
       const g = makeTruck(car, false); env.add(g);
       const n = dir === 'out' ? irand(4, 7) : irand(3, 6), now = clockMin();
+      const sku = (L.s && L.s.sku) || siteSku(L.idx);
       const t = {
         kind: 'tk', lite: L, ox: L.ox, id, ship: '#SHP-' + (80000 + liteSeq * 7 % 9999), car, dir, n, done: 0, g, bay: null, state: 'queued',
         dest: dir === 'out' ? DESTS[(liteSeq * 3) % DESTS.length] : L.s.code + ' ' + L.s.name, from: dir === 'in' ? car.from : L.s.code + ' ' + L.s.name,
-        x: 21.6 + L.ox, z: SPAWN_Z, yaw: Math.PI / 2, steps: [], spd: 6, rspd: 2.2, turn: 1.0, gate: 1.25, blockT: 0, ghost: 0, cargo: [], unloaded: 0,
+        x: 21.6 + L.ox, z: SPAWN_Z, yaw: Math.PI / 2, steps: [], spd: 6, rspd: 2.2, turn: 1.0, gate: 1.25, blockT: 0, ghost: 0, cargo: [sku, sku, sku, sku], unloaded: 0,
         times: { gate: now, arrived: null, done: null, confirmed: now - irand(260, 420) }
       };
       t.times.picked = t.times.confirmed + irand(50, 90); t.times.loaded = t.times.confirmed + irand(110, 150);
@@ -2356,6 +2339,8 @@
         .mv(21.6 + ox, 36).act(() => {
           t.done = 0; t.busy = null;
           t.state = 'queued'; t.dir = t.dir === 'in' ? 'out' : 'in';
+          const sku = (L.s && L.s.sku) || siteSku(L.idx);
+          t.cargo = [sku, sku, sku, sku];
           placeL(t);
         });
       t.steps = P.steps;
@@ -2365,7 +2350,8 @@
       const ox = L.ox, mine = L.bays.filter((b, i) => Math.floor(i / 2) === f.home);
       const b = mine.find(b => b.truck && (b.truck.state === 'unloading' || b.truck.state === 'loading') && b.truck.done < b.truck.n && !b.truck.busy);
       const P = planner(f), zl = z => z + 2.3;
-      const carry = on => () => { const c = f.g.userData.carriage; if (on && !f.carry) { f.carry = makePallet(pick(SKU_KEYS)); f.carry.userData.sel = null; f.carry.position.set(0.55, 0.05, 0); c.add(f.carry); } if (!on && f.carry) { c.remove(f.carry); f.carry = null; } };
+      const sku = (L.s && L.s.sku) || siteSku(L.idx);
+      const carry = on => () => { const c = f.g.userData.carriage; if (on && !f.carry) { f.carry = makePallet(sku); f.carry.userData.sel = null; f.carry.position.set(0.55, 0.05, 0); c.add(f.carry); } if (!on && f.carry) { c.remove(f.carry); f.carry = null; } };
       if (b) {
         const t = b.truck; t.busy = f; f.task = (t.dir === 'in' ? 'Unloading ' : 'Loading ') + t.id;
         const door = [1.9 + ox, zl(b.z)], yard = [9.2 + ox, zl(b.z)];
@@ -2772,8 +2758,8 @@
     const DRIVERS = ['Ada Larsen', 'Noah Tanaka', 'Sam Chen', 'Alex Haddad', 'Zoe Reyes', 'Inez Moreau', 'Ravi Patel', 'Mia Okafor', 'Leo Novak', 'Sara Kim', 'Omar Farouk', 'Lena Vogel'];
     const FL_MODELS = ['Toyota 8FBE18', 'Jungheinrich EFG 216', 'Linde E20', 'Hyster J2.0XN'];
     const SHIPPERS = ['Sunvale Grocers', 'Harbor & Co.', 'Halcyon Retail', 'Oakridge Market', 'Bayline Supply'];
-    const UNIT_KG = { LED: 2.4, CHR: 14, BOX: 0.3, GLV: 0.1, BRK: 0.6 };
-    const SKU_CAT = { LED: 'Lighting', CHR: 'Furniture', BOX: 'Packaging', GLV: 'PPE', BRK: 'Hardware' };
+    const UNIT_KG = { WOOD: 12.5, GOLD: 24.0, COPR: 18.0, TOYS: 1.2, SOLR: 19.5 };
+    const SKU_CAT = { WOOD: 'Materials', GOLD: 'Precious Metals', COPR: 'Industrial Metals', TOYS: 'Consumer Goods', SOLR: 'Clean Energy' };
     const hpick = (arr, s) => arr[hashStr(s) % arr.length];
     function plateOf(s) { const h = hashStr('p' + s), A = 'ABCDEFGHJKLMNPRSTUVWXYZ'; return A[h % 23] + A[(h >>> 5) % 23] + A[(h >>> 10) % 23] + '-' + (1000 + h % 9000); }
     const irow = (l, v) => '<div class="irow"><span>' + l + '</span><b>' + v + '</b></div>';
@@ -2853,7 +2839,7 @@
       if (s.kind === 'dest') { const t = s.t; return esc(t.type === 'cshop' ? t.shop.name : t.type === 'chouse' ? t.addr : t.name) + '<small>' + (t.type === 'chouse' ? 'Home' : 'Shop') + '</small>'; }
       if (s.kind === 'site') return esc(SITES[s.idx].code) + '<small>' + esc(SITES[s.idx].name) + '</small>';
       if (s.kind === 'chg') return 'C' + (s.i + 1) + '<small>' + (chgActive(s) ? 'Charging' : 'Free') + '</small>';
-      if (s.kind === 'pal') return esc(s.g.userData.meta.id) + '<small>' + esc(SKUS[s.g.userData.sku].name) + '</small>';
+      if (s.kind === 'pal') return esc(s.g.userData.meta.id) + '<small>' + esc((SKUS[s.g.userData.sku] || {}).name || s.g.userData.sku) + '</small>';
       return '';
     }
     function insHead(eyebrow, title, sub, icon, follow) {
@@ -2876,7 +2862,7 @@
       const tin = xfers.filter(t => t.to === Lt.idx).length, tout = xfers.filter(t => t.from === Lt.idx).length;
       if (tin || tout) h += '<div class="isub"><span>Network</span><span>' + tout + ' transfer' + (tout === 1 ? '' : 's') + ' out · ' + tin + ' coming in</span></div>';
       h += '<p class="inote">' + esc(s.blurb) + '</p>';
-      h += '<button class="act solid wide" data-ins="run" data-idx="' + Lt.idx + '"' + (shift || !un ? ' disabled' : '') + '>' + (!un ? 'Locked · earn 2 stars at ' + esc(SITES[Lt.idx - 1].name) : shift ? 'Finish your shift to run this site' : 'Run this site') + '</button>';
+      h += '<button class="act solid wide" data-ins="run" data-idx="' + Lt.idx + '">' + ICON.expand + ' Open Inside View</button>';
       return h;
     }
     function renderInspector() {
@@ -2898,8 +2884,10 @@
         h += '<div class="igrid"><div class="mini"><label>Stock on hand</label><b>' + occ + ' <span>/ ' + slots.length + '</span></b>' + ibar(occ / slots.length * 100, '') + '</div><div class="mini"><label>Truck bays</label><b>' + busy + ' <span>/ ' + bays.length + ' busy</span></b>' + ibar(busy / bays.length * 100, 'ok') + '</div>' +
           '<div class="mini"><label>Outbound today</label><b>' + sim.shipped + ' <span>orders</span></b></div><div class="mini"><label>Put-aways today</label><b>' + sim.putaways + ' <span>pallets</span></b></div></div>';
         h += '<div class="isub"><span>Inventory</span><span>units</span></div>';
-        SKU_KEYS.slice().sort((a, b) => st[b].units - st[a].units).slice(0, 4).forEach(k => {
-          const v = st[k], lv = v.pallets === 0 ? ['Out', 'bad'] : v.pallets < 3 ? ['Low Stock', 'warn'] : ['In Stock', 'ok'];
+        const mySku = siteSku();
+        const orderedSkus = [mySku, ...SKU_KEYS.filter(k => k !== mySku)];
+        orderedSkus.slice(0, 4).forEach(k => {
+          const v = st[k] || { units: 0, pallets: 0 }, lv = v.pallets === 0 ? ['Out', 'bad'] : v.pallets < 3 ? ['Low Stock', 'warn'] : ['In Stock', 'ok'];
           h += '<div class="invrow" data-goto="inv"><span class="sw" style="background:' + SKUS[k].color + ';width:18px;height:18px"></span><span>' + esc(SKUS[k].name) + '</span><b class="mono">' + fmtN(v.units) + '</b><span class="pill ' + lv[1] + '">' + lv[0] + '</span></div>';
         });
         const working = forklifts.filter(f => f.steps.length && !f.charging && !f.broken), f0 = working[0] || forklifts[0];
@@ -3004,10 +2992,35 @@
       $('#bellDD').innerHTML = '<div class="ddh"><b>Notifications</b>' + (notices.length ? '<button class="act" data-clear="1">Clear</button>' : '') + '</div>' +
         (notices.length ? notices.slice(0, 14).map(n => '<div class="ddn ' + n.kind + '"><time>' + fmtT(n.t) + '</time><div><b>' + esc(n.title) + '</b>' + (n.body ? '<small>' + esc(n.body) + '</small>' : '') + '</div></div>').join('') : '<div class="empty">Nothing new. Problems on the floor, achievements and promotions show up here.</div>');
     }
+    function openWarehouseInside(idx) {
+      if (idx == null || idx < 0 || idx >= SITES.length) return;
+      const now = performance.now();
+      if (openWarehouseInside._lastIdx === idx && (now - (openWarehouseInside._lastT || 0)) < 400) return;
+      openWarehouseInside._lastIdx = idx;
+      openWarehouseInside._lastT = now;
+      exitTown(); exitBuild(true); closeModal();
+      if (game.siteIdx !== idx) {
+        loadSite(idx);
+      }
+      const ox = SITES[idx].k * SLICE_W;
+      view.targetT.set(ox - 9.5, 0, 0.5);
+      view.target.set(ox - 9.5, 0, 0.5);
+      view.zoomT = innerWidth <= 760 ? 1.25 : 1.15;
+      view.zoom = innerWidth <= 760 ? 1.25 : 1.15;
+      shell.op = 0;
+      if (shell.g) {
+        shell.g.visible = false;
+        shell.mats.forEach(m => { m.opacity = 0; m.depthWrite = false; });
+      }
+      dirty = true;
+      renderPanel();
+      $('#siteCode').textContent = SITES[idx].code;
+      $('#siteCode').style.background = SITES[idx].accent;
+      $('#siteName').textContent = SITES[idx].name;
+      toast('ok', SITES[idx].name + ' · Inside View', 'Item: ' + SKUS[SITES[idx].sku].name + ' (' + SKUS[SITES[idx].sku].code + ') · All cartons orange', ICON.dock);
+    }
     function flyToSite(i, activate) {
-      exitTown(); exitBuild(true); select(null); closeModal(); game.follow = null;
-      const s = SITES[i]; game.fly = { i, activate: activate !== false, x: s.k * SLICE_W + 1.5 };
-      view.targetT.set(game.fly.x, 0, 1.5); view.zoomT = Math.min(view.zoomT, 0.32);
+      openWarehouseInside(i);
     }
     /* ---------------- camera ---------------- */
     const cam = new THREE.OrthographicCamera(-1, 1, 1, -1, -700, 1000);
@@ -3016,7 +3029,13 @@
     function defaultView() {
       const a = innerWidth / innerHeight, mobile = innerWidth <= 760;
       view.size = mobile ? clamp(30 / a * .82, 30, 70) : 34;
-      view.targetT.set((mobile ? -1 : 1.5) + OX, 0, mobile ? 2 : 1.5); view.zoomT = mobile ? 1.15 : 1;
+      view.targetT.set(-9.5 + OX, 0, mobile ? 1 : 0.5);
+      view.zoomT = mobile ? 1.25 : 1.15;
+      shell.op = 0;
+      if (shell.g) {
+        shell.g.visible = false;
+        shell.mats.forEach(m => { m.opacity = 0; m.depthWrite = false; });
+      }
     }
     function resize() {
       const w = innerWidth, h = innerHeight; renderer.setSize(w, h);
@@ -3058,9 +3077,20 @@
         }
       } else if (e.pointerType === 'mouse') { if (game.town) { townHoverT = tileAtScreen(e.clientX, e.clientY); el.classList.add('hover'); } else hoverAt(e.clientX, e.clientY); }
     });
+    let lastTap = null;
     function endPtr(e) {
       ptrs.delete(e.pointerId);
       if (drag && !drag.moved && performance.now() - drag.t < 500) {
+        const now = performance.now();
+        if (lastTap && (now - lastTap.t < 380) && Math.hypot(e.clientX - lastTap.x, e.clientY - lastTap.y) < 30) {
+          lastTap = null;
+          const sIdx = findWarehouseAtScreen(e.clientX, e.clientY);
+          if (sIdx >= 0) {
+            openWarehouseInside(sIdx);
+            return;
+          }
+        }
+        lastTap = { t: now, x: e.clientX, y: e.clientY };
         if (game.town) { const t = tileAtScreen(e.clientX, e.clientY); townHoverT = t; applyTool(t); }
         else if (game.building) { const k = pickGhost(e.clientX, e.clientY); buildSel = k; renderPanel(); if (k) { const r = pBody.querySelector('[data-bkey="' + k + '"]'); if (r) r.scrollIntoView({ block: 'nearest' }); } }
         else select(pickAt(e.clientX, e.clientY));
@@ -3072,6 +3102,47 @@
     el.addEventListener('wheel', e => { e.preventDefault(); view.zoomT = clamp(view.zoomT * Math.exp(-e.deltaY * 0.0015), .08, 3.2); hideHint(); if (tut) tut.flags.drag = true; }, { passive: false });
     const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
     function setRay(x, y) { ndc.set(x / innerWidth * 2 - 1, -(y / innerHeight) * 2 + 1); ray.setFromCamera(ndc, cam); }
+    function findWarehouseAtScreen(x, y) {
+      setRay(x, y);
+      const targets = [world, ...[...lites.values()].map(L => L.G)];
+      const hits = ray.intersectObjects(targets, true).filter(h => !h.object.isSprite);
+      if (hits.length) {
+        for (const hit of hits) {
+          for (const Lt of lites.values()) {
+            let curr = hit.object;
+            while (curr) {
+              if (curr === Lt.G || (curr.userData && curr.userData.sel && curr.userData.sel.idx === Lt.idx)) return Lt.idx;
+              curr = curr.parent;
+            }
+          }
+          let curr = hit.object;
+          while (curr) {
+            if (curr === world) return game.siteIdx;
+            curr = curr.parent;
+          }
+          const ptX = hit.point.x;
+          const k = clamp(Math.round((ptX - 2) / SLICE_W), -2, 2);
+          const sIdx = SITES.findIndex(s => s.k === k);
+          if (sIdx >= 0) return sIdx;
+        }
+      }
+      const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+      const pt = new THREE.Vector3();
+      if (ray.ray.intersectPlane(plane, pt)) {
+        const k = clamp(Math.round((pt.x - 2) / SLICE_W), -2, 2);
+        const sIdx = SITES.findIndex(s => s.k === k);
+        if (sIdx >= 0) return sIdx;
+      }
+      return viewIdx();
+    }
+    function onDblClick(e) {
+      e.preventDefault();
+      const sIdx = findWarehouseAtScreen(e.clientX, e.clientY);
+      if (sIdx >= 0) {
+        openWarehouseInside(sIdx);
+      }
+    }
+    el.addEventListener('dblclick', onDblClick);
     function pickAt(x, y) {
       setRay(x, y);
       const LT = [...lites.values()];
@@ -3186,12 +3257,11 @@
           inprog.forEach(({ o, s }) => { h += '<div class="row click' + (o.late ? ' late' : '') + (game.trkOrder === o.id ? ' hl' : '') + '" data-trko="' + o.id + '"><div class="badge ' + (o.rush ? 'rush' : '') + '">' + (o.rush ? 'R' : '›') + '</div><div class="t"><b class="mono">' + o.id + '</b><small>' + esc(s) + ' · ' + dueText(o) + '</small></div><div class="r"><span class="pill ok">' + esc(SKUS[o.sku].code) + '</span></div></div>'; });
         }
       } else if (tab === 'inv') {
-        h += '<div class="sub"><span>Racks · ' + occ + ' of ' + slots.length + ' slots</span></div>';
-        SKU_KEYS.forEach(k => {
-          const s = SKUS[k], v = st[k]; const lv = v.pallets === 0 ? ['Out', 'bad'] : v.pallets < 3 ? ['Low', 'warn'] : ['In stock', 'ok'];
-          h += '<div class="row' + (hl === k ? ' hl' : '') + '"><div class="sw" style="background:' + s.color + '"></div><div class="t"><b>' + esc(s.name) + '</b><small class="mono">' + s.code + ' · ' + v.pallets + ' plt · ' + fmtN(v.units) + ' units</small></div><div class="r"><span class="pill ' + lv[1] + '">' + lv[0] + '</span>' +
-            (v.pallets < 4 ? (rushInbound(k) ? '<span class="pill info">Rush inbound</span>' : '<button class="act" data-act="xfer:' + k + '" title="A WareTrack truck brings it from another of your warehouses">Transfer' + cost(15) + '</button> <button class="act" data-act="exp:' + k + '">Expedite' + cost(35) + '</button>') : '') + '</div></div>';
-        });
+        const mySku = siteSku();
+        const v = st[mySku] || { pallets: occ, units: totalUnits() };
+        h += '<div class="sub"><span>' + esc(site.name) + ' Dedicated Inventory · ' + esc(SKUS[mySku].name) + '</span></div>';
+        h += '<div class="row hl"><div class="sw" style="background:' + SKUS[mySku].color + '"></div><div class="t"><b>' + esc(SKUS[mySku].name) + '</b><small class="mono">' + SKUS[mySku].code + ' · ' + occ + ' pallets · ' + fmtN(totalUnits()) + ' units</small></div><div class="r"><span class="pill ok">100% ' + esc(SKUS[mySku].name) + '</span></div></div>';
+        h += '<div class="callout ok" style="margin-top:12px;font-size:12px">This facility exclusively stocks and ships <b>' + esc(SKUS[mySku].name) + '</b> with all cartons in orange.</div>';
       } else if (tab === 'dock') {
         bays.forEach(b => {
           const t = b.truck;
@@ -3679,7 +3749,24 @@
       staging.forEach(st => { if (!st.pin) return; st.pin.visible = !!st.pallet; if (st.pallet) st.pin.userData.head.forEach(m => m.position.y = m.userData.y0 + Math.sin(perf * 3 + st.x) * .1); });
       barriers.forEach(b => { const tn = t => Math.hypot(wx(t) - 21.6 - b.ox, t.z - b.pz) < 9.5; const near = b.kind === 'tk' ? (trucks.some(tn) || liteTrucks.some(tn)) : vans.some(v => Math.hypot(v.x - 12 - b.ox, v.z - b.pz) < 5.5); b.open += clamp((near ? 1 : 0) - b.open, -rdt * 1.6, rdt * 1.6); b.arm.rotation.z = b.dir * b.open * 1.35; });
       if (town.pins) { const pv = view.zoom < 0.4, ps = Math.min(3, 0.13 / view.zoom) * 46; town.pins.forEach(p => { p.visible = pv && !game.town; p.scale.set(ps, ps * 140 / 640, 1); }); }
-      if (shell.g) { const tgt = (view.zoom < 0.8 || game.town) ? 1 : 0; shell.op += (tgt - shell.op) * Math.min(1, rdt * 4); const o = shell.op; shell.mats.forEach(m => { m.opacity = o; m.depthWrite = o > 0.98; }); shell.g.visible = o > 0.03; }
+      if (shell.g) {
+        const tgt = (view.zoom < 0.72 || game.town) ? 1 : 0;
+        shell.op += (tgt - shell.op) * Math.min(1, rdt * 5);
+        const o = shell.op;
+        shell.mats.forEach(m => { m.opacity = o; m.depthWrite = o > 0.95; });
+        shell.g.visible = o > 0.02;
+      }
+      lites.forEach(Lt => {
+        if (Lt.shell) {
+          const dist = Math.abs(view.target.x - Lt.ox);
+          const tgt = (dist < 26 && view.zoom >= 0.72 && !game.town) ? 0 : 1;
+          Lt.shellOp = Lt.shellOp != null ? Lt.shellOp : 1;
+          Lt.shellOp += (tgt - Lt.shellOp) * Math.min(1, rdt * 5);
+          const o = Lt.shellOp;
+          (Lt.shellMats || []).forEach(m => { m.opacity = o; m.depthWrite = o > 0.95; });
+          Lt.shell.visible = o > 0.02;
+        }
+      });
       for (let i = pops.length - 1; i >= 0; i--) {
         const p = pops[i]; p.t += rdt;
         if (p.t > 1.5) { p.el.remove(); pops.splice(i, 1); continue; }
@@ -3702,6 +3789,7 @@
       game.menuSel = unlockedIdx[unlockedIdx.length - 1] || 0;
       $('#loading').remove(); $('#hud').hidden = false;
       loadSite(game.menuSel);
+      toast('ok', site.name + ' Active', 'Exclusive Item: ' + SKUS[site.sku].name + ' · All cartons orange', ICON.dock);
       addEventListener('resize', resize);
       setSpeed(1); renderIncident(); syncSoundBtn();
       game.menuTab = save.daily.last !== todayKey() && save.tutorial && save.stats.shifts > 0 ? 'daily' : 'play';
