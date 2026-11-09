@@ -932,21 +932,24 @@
       BLOCK_FEATURES.clear();
       SLICES.forEach(k => {
         const o = 12 * k;
-        // Block 1: North Block (i: o-7..o-1, j: -6..-1) -> 3 houses, 1 pond, 2 trees
-        setBlockFeat(o - 6, -2, 'house', { face: 2 });
-        setBlockFeat(o - 3, -2, 'house', { face: 2 });
-        setBlockFeat(o - 2, -5, 'house', { face: 0 });
-        setBlockFeat(o - 5, -4, 'pond');
-        setBlockFeat(o - 6, -4, 'tree');
-        setBlockFeat(o - 2, -3, 'tree');
+        // North blocks: Skip for k = -1 and k = 1 (Grand Plaza Mall & Crystal Galleria Mall plots at z = -50)
+        if (k !== -1 && k !== 1) {
+          // Block 1: North Block (i: o-7..o-1, j: -6..-1) -> 3 houses, 1 pond, 2 trees
+          setBlockFeat(o - 6, -2, 'house', { face: 2 });
+          setBlockFeat(o - 3, -2, 'house', { face: 2 });
+          setBlockFeat(o - 2, -5, 'house', { face: 0 });
+          setBlockFeat(o - 5, -4, 'pond');
+          setBlockFeat(o - 6, -4, 'tree');
+          setBlockFeat(o - 2, -3, 'tree');
 
-        // Block 2: North-East Block (i: o+1..o+3, j: -6..-1) -> 2 houses, 1 pond, 1 tree
-        setBlockFeat(o + 2, -2, 'house', { face: 2 });
-        setBlockFeat(o + 2, -5, 'house', { face: 0 });
-        setBlockFeat(o + 2, -4, 'pond');
-        setBlockFeat(o + 1, -3, 'tree');
+          // Block 2: North-East Block (i: o+1..o+3, j: -6..-1) -> 2 houses, 1 pond, 1 tree
+          setBlockFeat(o + 2, -2, 'house', { face: 2 });
+          setBlockFeat(o + 2, -5, 'house', { face: 0 });
+          setBlockFeat(o + 2, -4, 'pond');
+          setBlockFeat(o + 1, -3, 'tree');
+        }
 
-        // Block 3: West of Factory (i: o-7..o-6, j: 1..5) -> 2 houses, 1 tree
+        // Block 3: West of Dock (i: o-7..o-6, j: 1..5) -> 2 houses, 1 tree
         setBlockFeat(o - 7, 2, 'house', { face: 3 });
         setBlockFeat(o - 7, 4, 'house', { face: 3 });
         setBlockFeat(o - 6, 3, 'tree');
@@ -969,18 +972,21 @@
         setBlockFeat(o + 2, 8, 'pond');
         setBlockFeat(o + 1, 8, 'tree');
 
-        // Block 7: South Block 2 (i: o-7..o-1, j: 11..14) -> 2 houses, 1 pond, 2 trees
-        setBlockFeat(o - 5, 12, 'house', { face: 0 });
-        setBlockFeat(o - 2, 13, 'house', { face: 2 });
-        setBlockFeat(o - 4, 13, 'pond');
-        setBlockFeat(o - 6, 13, 'tree');
-        setBlockFeat(o - 3, 12, 'tree');
+        // South Block 2: Skip for k = -1, 0, 1 (3 Factory plots at z = 78: Gold, Wood & Toys, Copper & Solar)
+        if (k !== -1 && k !== 0 && k !== 1) {
+          // Block 7: South Block 2 (i: o-7..o-1, j: 11..14) -> 2 houses, 1 pond, 2 trees
+          setBlockFeat(o - 5, 12, 'house', { face: 0 });
+          setBlockFeat(o - 2, 13, 'house', { face: 2 });
+          setBlockFeat(o - 4, 13, 'pond');
+          setBlockFeat(o - 6, 13, 'tree');
+          setBlockFeat(o - 3, 12, 'tree');
 
-        // Block 8: South-East Block 2 (i: o+1..o+3, j: 11..14) -> 2 houses, 1 pond, 1 tree
-        setBlockFeat(o + 2, 12, 'house', { face: 0 });
-        setBlockFeat(o + 2, 14, 'house', { face: 2 });
-        setBlockFeat(o + 2, 13, 'pond');
-        setBlockFeat(o + 1, 13, 'tree');
+          // Block 8: South-East Block 2 (i: o+1..o+3, j: 11..14) -> 2 houses, 1 pond, 1 tree
+          setBlockFeat(o + 2, 12, 'house', { face: 0 });
+          setBlockFeat(o + 2, 14, 'house', { face: 2 });
+          setBlockFeat(o + 2, 13, 'pond');
+          setBlockFeat(o + 1, 13, 'tree');
+        }
       });
     }
     initBlockFeatures();
@@ -1069,13 +1075,13 @@
       return new THREE.Group();
     }
 
-    /* ---------------- factory (front of WH 1) & malls (behind WH 2 & WH 3) ---------------- */
-    function makeFactory(cx, cz) {
+    /* ---------------- 3 factories (front of warehouses) & 2 malls (behind warehouses) ---------------- */
+    function makeCopperSolarFactory(cx, cz) {
       const g = new THREE.Group(); g.position.set(cx, 0, cz); townStatic.add(g);
       // Heavy industrial yard & foundation
-      box(48, 0.08, 38, '#262e3d', 0, 0.04, 0, g, false);
+      box(48, 0.08, 38, '#1e293b', 0, 0.04, 0, g, false);
       box(49.2, 0.16, 39.2, '#94a3b8', 0, 0.08, 0, g, false);
-      box(22, 0.09, 14, '#3b4354', 12, 0.045, 11, g, false);
+      box(22, 0.09, 14, '#334155', 12, 0.045, 11, g, false);
 
       // Yellow safety hatchings
       for (let s = -18; s <= 18; s += 2.4) {
@@ -1083,110 +1089,284 @@
         box(1.2, 0.012, 0.22, '#f59e0b', s, 0.09, -17.6, g, false);
       }
 
-      // Main Manufacturing Hall
+      // Main Smelting Hall (Industrial dark slate with copper trim)
       const hallW = 26, hallH = 6.4, hallD = 22;
-      box(hallW, hallH, hallD, '#475569', -6, hallH / 2, -2, g);
-      box(hallW + 0.4, 0.35, hallD + 0.4, '#f59e0b', -6, hallH + 0.15, -2, g);
+      box(hallW, hallH, hallD, '#334155', -6, hallH / 2, -2, g);
+      box(hallW + 0.4, 0.35, hallD + 0.4, '#ea580c', -6, hallH + 0.15, -2, g);
 
-      // Sawtooth industrial roof with north-facing skylights
+      // Sawtooth industrial roof with copper ridges
       for (let k = 0; k < 4; k++) {
         const zOffset = -11 + k * 5.5 + 2.75;
-        const roofP = new THREE.Mesh(prism(hallW + 0.2, 5.4, 1.8), mat('#334155'));
+        const roofP = new THREE.Mesh(prism(hallW + 0.2, 5.4, 1.8), mat('#1e293b'));
         roofP.position.set(-6, hallH + 0.3, zOffset);
         roofP.castShadow = true;
         g.add(roofP);
-        box(hallW - 1, 1.1, 0.1, '#93c5fd', -6, hallH + 1.1, zOffset - 2.5, g, false);
+        box(hallW - 1, 1.1, 0.1, '#38bdf8', -6, hallH + 1.1, zOffset - 2.5, g, false);
       }
 
-      // Industrial Chimneys / Smokestacks
+      // Twin Smelting Smokestacks with Copper bands
       cyl(1.4, 1.9, 19, '#475569', -15, 9.5, -9, g, 20);
-      cyl(1.42, 1.48, 1.8, '#ef4444', -15, 17.1, -9, g, 20);
-      cyl(1.41, 1.45, 1.8, '#ffffff', -15, 15.3, -9, g, 20);
-      cyl(1.40, 1.43, 1.8, '#ef4444', -15, 13.5, -9, g, 20);
-      cyl(1.55, 1.55, 0.4, '#1e293b', -15, 19.2, -9, g, 20);
+      cyl(1.42, 1.48, 1.8, '#ea580c', -15, 17.1, -9, g, 20);
+      cyl(1.41, 1.45, 1.8, '#f8fafc', -15, 15.3, -9, g, 20);
+      cyl(1.40, 1.43, 1.8, '#ea580c', -15, 13.5, -9, g, 20);
+      cyl(1.55, 1.55, 0.4, '#0f172a', -15, 19.2, -9, g, 20);
 
       cyl(1.1, 1.5, 15.5, '#64748b', -11, 7.75, -11, g, 20);
-      cyl(1.12, 1.17, 1.5, '#ef4444', -11, 13.8, -11, g, 20);
-      cyl(1.11, 1.14, 1.5, '#ffffff', -11, 12.3, -11, g, 20);
-      cyl(1.10, 1.12, 1.5, '#ef4444', -11, 10.8, -11, g, 20);
-      cyl(1.25, 1.25, 0.35, '#1e293b', -11, 15.6, -11, g, 20);
+      cyl(1.12, 1.17, 1.5, '#ea580c', -11, 13.8, -11, g, 20);
+      cyl(1.11, 1.14, 1.5, '#f8fafc', -11, 12.3, -11, g, 20);
+      cyl(1.10, 1.12, 1.5, '#ea580c', -11, 10.8, -11, g, 20);
+      cyl(1.25, 1.25, 0.35, '#0f172a', -11, 15.6, -11, g, 20);
 
-      box(0.9, 0.9, 6.5, '#64748b', -13, 5.2, -7.5, g);
+      // Copper cathode busbars & ducting
+      box(0.9, 0.9, 6.5, '#c2410c', -13, 5.2, -7.5, g);
+      box(12, 0.35, 0.35, '#ea580c', -6, 6.8, -10, g);
+      box(12, 0.35, 0.35, '#ea580c', -6, 6.8, 6, g);
 
-      // Fabrication / Assembly Hall
-      box(14, 4.8, 18, '#334155', 12, 2.4, -4, g);
-      box(14.3, 0.3, 18.3, '#f59e0b', 12, 4.9, -4, g);
-      box(3.2, 1.4, 2.4, '#64748b', 10, 5.6, -6, g);
-      cyl(0.7, 0.7, 0.8, '#94a3b8', 10, 6.7, -6, g, 16);
-      box(2.8, 1.2, 2.2, '#64748b', 14, 5.5, -2, g);
+      // Solar Photovoltaic Synthesis Wing & Solar Roof Panels
+      box(14, 4.8, 18, '#1e293b', 12, 2.4, -4, g);
+      box(14.3, 0.3, 18.3, '#0284c7', 12, 4.9, -4, g);
 
-      // Overhead Conveyor / Piping Bridge
-      box(4, 1.4, 1.4, '#64748b', 4, 3.8, -5, g);
+      // Large Roof Solar Array on synthesis wing (tilted photovoltaic arrays)
+      for (let rx = 7; rx <= 17; rx += 4.5) {
+        for (let rz = -10; rz <= 2; rz += 4.2) {
+          const spg = new THREE.Group();
+          spg.position.set(rx, 5.2, rz);
+          spg.rotation.x = -Math.PI / 8;
+          g.add(spg);
+          box(3.8, 0.08, 3.2, '#0f172a', 0, 0, 0, spg);
+          box(3.5, 0.05, 2.9, '#1d4ed8', 0, 0.05, 0, spg);
+          for (let l = -1.2; l <= 1.21; l += 0.8) {
+            box(0.04, 0.06, 2.8, '#93c5fd', l, 0.055, 0, spg, false);
+          }
+        }
+      }
 
-      // Chemical / Raw Material Silos
-      cyl(2.7, 2.7, 8.2, '#f1f5f9', 15, 4.1, 9, g, 24);
-      const c1 = new THREE.Mesh(new THREE.ConeGeometry(2.75, 1.2, 24), mat('#cbd5e1'));
+      // Copper storage silos & cooling units
+      cyl(2.7, 2.7, 8.2, '#94a3b8', 15, 4.1, 9, g, 24);
+      const c1 = new THREE.Mesh(new THREE.ConeGeometry(2.75, 1.2, 24), mat('#ea580c'));
       c1.position.set(15, 8.8, 9); g.add(c1);
 
-      cyl(2.4, 2.4, 7.4, '#94a3b8', 9.5, 3.7, 10, g, 24);
-      const c2 = new THREE.Mesh(new THREE.ConeGeometry(2.45, 1.1, 24), mat('#64748b'));
+      cyl(2.4, 2.4, 7.4, '#64748b', 9.5, 3.7, 10, g, 24);
+      const c2 = new THREE.Mesh(new THREE.ConeGeometry(2.45, 1.1, 24), mat('#0284c7'));
       c2.position.set(9.5, 7.95, 10); g.add(c2);
 
-      cyl(2.0, 2.0, 6.2, '#38bdf8', 4.5, 3.1, 11, g, 24);
-      const c3 = new THREE.Mesh(new THREE.ConeGeometry(2.05, 0.9, 24), mat('#0284c7'));
-      c3.position.set(4.5, 6.65, 11); g.add(c3);
-
-      box(12, 0.12, 0.6, '#475569', 10, 5.8, 10, g, false);
-      box(0.2, 5.8, 0.2, '#64748b', 15, 2.9, 6.2, g, false);
-      box(0.2, 5.8, 0.2, '#64748b', 9.5, 2.9, 7.5, g, false);
-
-      // Cooling Tower
-      cyl(2.4, 3.1, 4.6, '#64748b', -16, 2.3, 10, g, 20);
-      cyl(2.2, 2.2, 0.35, '#1e293b', -16, 4.7, 10, g, 20);
-      cyl(0.25, 0.25, 1.2, '#e2e8f0', -16, 5.4, 10, g);
-
-      // Substation
-      box(4.5, 1.8, 3.5, '#475569', -8, 0.9, 12, g);
-      for (let b = 0; b < 3; b++) cyl(0.35, 0.35, 1.2, '#94a3b8', -9.2 + b * 1.2, 2.2, 12, g, 12);
-      box(6.2, 1.4, 0.12, '#64748b', -8, 0.7, 14.5, g, false);
-
-      // Loading bay with rollup door
+      // Loading bay with orange rollup door
       box(5.5, 4.2, 0.2, '#f8fafc', -6, 2.1, 9.1, g);
       box(4.5, 3.4, 0.1, '#cbd5e1', -6, 1.7, 9.2, g);
       for (let r = 0; r < 7; r++) box(4.4, 0.05, 0.12, '#94a3b8', -6, 0.4 + r * 0.45, 9.22, g, false);
       box(4.8, 0.3, 1.2, '#ea580c', -6, 3.9, 9.6, g);
 
-      // Stacked Containers & Yard Truck
-      const yardTk = makeTruck({ name: 'Titan Logistics', stripe: '#ea580c', cab: '#ea580c', from: 'Industrial Port' }, false);
+      // Yard Truck
+      const yardTk = makeTruck({ name: 'Solar Logistics', stripe: '#0284c7', cab: '#ea580c', from: 'Copper Smelter' }, false);
       yardTk.position.set(14, 0, 11);
       yardTk.rotation.y = Math.PI;
       g.add(yardTk);
 
-      const yardCtr = (x, z, col, ry) => {
-        const cg = new THREE.Group(); cg.position.set(x, 0, z); cg.rotation.y = ry || 0; g.add(cg);
-        box(6, 2.5, 2.4, col, 0, 1.25, 0, cg);
-        for (let k = -2.7; k <= 2.71; k += 0.45) box(0.07, 2.3, 2.46, '#1e293b', k, 1.25, 0, cg, false);
-      };
-      yardCtr(-18, 2, '#0284c7', 0.1);
-      yardCtr(-18, 2, '#ea580c', 0.1);
-      yardCtr(-18, -1, '#16a34a', 0);
+      // Copper cathodes & solar module crates in yard
+      box(3.2, 1.4, 2.2, '#c2410c', -18, 0.7, 2, g);
+      box(3.2, 1.4, 2.2, '#0284c7', -18, 0.7, -2, g);
+      box(3.0, 1.2, 2.0, '#ea580c', -18, 2.0, 0, g);
 
-      // Main Facade Billboard
+      // Billboard
       const factTex = canvasTex(1024, 160, (ctx, W, H) => {
         ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, W, H);
-        ctx.fillStyle = '#ea580c'; ctx.fillRect(0, 0, 24, H); ctx.fillRect(W - 24, 0, 24, H);
-        ctx.font = '800 68px "Bricolage Grotesque", sans-serif'; ctx.fillStyle = '#f8fafc'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText('TITAN HEAVY INDUSTRIES', W / 2, H / 2 - 8);
-        ctx.font = '700 28px "JetBrains Mono", monospace'; ctx.fillStyle = '#f59e0b';
-        ctx.fillText('PLANT 01 · ADVANCED FABRICATION & SYNTHESIS', W / 2, H / 2 + 42);
+        ctx.fillStyle = '#ea580c'; ctx.fillRect(0, 0, 24, H);
+        ctx.fillStyle = '#0284c7'; ctx.fillRect(W - 24, 0, 24, H);
+        ctx.font = '800 60px "Bricolage Grotesque", sans-serif'; ctx.fillStyle = '#f8fafc'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('COPPER & SOLAR FACTORY', W / 2, H / 2 - 8);
+        ctx.font = '700 26px "JetBrains Mono", monospace'; ctx.fillStyle = '#38bdf8';
+        ctx.fillText('METALLURGIC SMELTING & PHOTOVOLTAIC SYNTHESIS', W / 2, H / 2 + 42);
       });
       plane(factTex, 14, 2.2, g, -6, 7.8, 9.2);
 
-      const selObj = { kind: 'factory', name: 'Titan Heavy Industries', code: 'PLANT-01', type: 'Industrial Manufacturing Complex', cx, cz };
+      const selObj = { kind: 'factory', name: 'Copper and Solar Factory', code: 'PLANT-CS', type: 'Smelting & Photovoltaic Plant', cx, cz };
       g.userData.sel = selObj;
+      town.objs.set('landmark:factory_copper_solar', g);
       town.objs.set('landmark:factory', g);
       return g;
     }
+
+    function makeWoodToysFactory(cx, cz) {
+      const g = new THREE.Group(); g.position.set(cx, 0, cz); townStatic.add(g);
+      // Industrial timber yard foundation
+      box(48, 0.08, 38, '#2b261f', 0, 0.04, 0, g, false);
+      box(49.2, 0.16, 39.2, '#94a3b8', 0, 0.08, 0, g, false);
+      box(22, 0.09, 14, '#3d3227', 12, 0.045, 11, g, false);
+
+      // Yellow safety hatchings
+      for (let s = -18; s <= 18; s += 2.4) {
+        box(1.2, 0.012, 0.22, '#f59e0b', s, 0.09, 17.6, g, false);
+        box(1.2, 0.012, 0.22, '#f59e0b', s, 0.09, -17.6, g, false);
+      }
+
+      // Timber Sawmill Main Building (Cedar wood walls with forest green trim)
+      const millW = 24, millH = 6.2, millD = 22;
+      box(millW, millH, millD, '#78350f', -7, millH / 2, -2, g);
+      box(millW + 0.4, 0.35, millD + 0.4, '#15803d', -7, millH + 0.15, -2, g);
+
+      // Pitched timber roof
+      const roofM = new THREE.Mesh(prism(millW + 0.4, millD + 0.2, 3.2), mat('#166534'));
+      roofM.position.set(-7, millH + 0.3, -2);
+      roofM.castShadow = true;
+      g.add(roofM);
+
+      // Sawmill intake log ramp & stacked timber logs
+      box(4.5, 0.4, 12, '#854d0e', -20, 1.2, -4, g);
+      for (let ly = 0; ly < 3; ly++) {
+        for (let lz = -8; lz <= 0; lz += 2.2) {
+          const log = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 5, 12), mat('#5c3a21'));
+          log.rotation.z = Math.PI / 2;
+          log.position.set(-18.5, 1.8 + ly * 1.0, lz);
+          log.castShadow = true;
+          g.add(log);
+        }
+      }
+
+      // Sawdust cyclone hoppers / dust extraction silos
+      cyl(1.8, 1.8, 6.0, '#cbd5e1', -16, 4.5, 9, g, 20);
+      const con1 = new THREE.Mesh(new THREE.ConeGeometry(1.82, 2.2, 20), mat('#eab308'));
+      con1.rotation.x = Math.PI;
+      con1.position.set(-16, 1.5, 9); g.add(con1);
+
+      cyl(1.4, 1.4, 5.2, '#94a3b8', -12, 4.0, 10, g, 20);
+      const con2 = new THREE.Mesh(new THREE.ConeGeometry(1.42, 1.8, 20), mat('#eab308'));
+      con2.rotation.x = Math.PI;
+      con2.position.set(-12, 1.4, 10); g.add(con2);
+
+      // Toy Fabrication & Robotics Studio Wing (Bright contemporary creative architecture)
+      box(16, 5.4, 18, '#f8fafc', 11, 2.7, -4, g);
+      box(16.4, 0.35, 18.4, '#3b82f6', 11, 5.5, -4, g);
+
+      // Large colorful toy cubes on roof terrace
+      box(2.2, 2.2, 2.2, '#ef4444', 7, 6.8, -5, g);
+      box(1.8, 1.8, 1.8, '#eab308', 11, 6.6, -7, g);
+      box(2.0, 2.0, 2.0, '#3b82f6', 15, 6.7, -4, g);
+      box(1.6, 1.6, 1.6, '#10b981', 10, 6.5, -2, g);
+
+      // Loading bay with green roll-up door
+      box(5.5, 4.2, 0.2, '#f8fafc', -7, 2.1, 9.1, g);
+      box(4.5, 3.4, 0.1, '#bbf7d0', -7, 1.7, 9.2, g);
+      for (let r = 0; r < 7; r++) box(4.4, 0.05, 0.12, '#16a34a', -7, 0.4 + r * 0.45, 9.22, g, false);
+      box(4.8, 0.3, 1.2, '#15803d', -7, 3.9, 9.6, g);
+
+      // Yard Truck (Wood & Toys transport)
+      const yardTk = makeTruck({ name: 'CraftLogistics', stripe: '#16a34a', cab: '#f59e0b', from: 'Timber Mills' }, false);
+      yardTk.position.set(13, 0, 11);
+      yardTk.rotation.y = Math.PI;
+      g.add(yardTk);
+
+      // Stacks of toy crates and timber pallets
+      box(3.2, 1.5, 2.2, '#d97706', 4, 0.75, 10, g);
+      box(2.4, 1.2, 2.0, '#2563eb', 4, 2.1, 10, g);
+
+      // Billboard
+      const factTex = canvasTex(1024, 160, (ctx, W, H) => {
+        ctx.fillStyle = '#1c1917'; ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = '#16a34a'; ctx.fillRect(0, 0, 24, H);
+        ctx.fillStyle = '#f59e0b'; ctx.fillRect(W - 24, 0, 24, H);
+        ctx.font = '800 62px "Bricolage Grotesque", sans-serif'; ctx.fillStyle = '#f8fafc'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('WOOD & TOYS FACTORY', W / 2, H / 2 - 8);
+        ctx.font = '700 26px "JetBrains Mono", monospace'; ctx.fillStyle = '#86efac';
+        ctx.fillText('TIMBER MILLING & PRECISION TOY FABRICATION', W / 2, H / 2 + 42);
+      });
+      plane(factTex, 14, 2.2, g, -7, 7.8, 9.2);
+
+      const selObj = { kind: 'factory', name: 'Wood and Toys Factory', code: 'PLANT-WT', type: 'Timber & Toy Fabrication Plant', cx, cz };
+      g.userData.sel = selObj;
+      town.objs.set('landmark:factory_wood_toys', g);
+      return g;
+    }
+
+    function makeGoldFactory(cx, cz) {
+      const g = new THREE.Group(); g.position.set(cx, 0, cz); townStatic.add(g);
+      // High-security reinforced bullion compound foundation
+      box(48, 0.08, 38, '#1e293b', 0, 0.04, 0, g, false);
+      box(49.2, 0.16, 39.2, '#cbd5e1', 0, 0.08, 0, g, false);
+      box(22, 0.09, 14, '#0f172a', 12, 0.045, 11, g, false);
+
+      // Polished Gold safety hatchings
+      for (let s = -18; s <= 18; s += 2.4) {
+        box(1.2, 0.012, 0.22, '#eab308', s, 0.09, 17.6, g, false);
+        box(1.2, 0.012, 0.22, '#eab308', s, 0.09, -17.6, g, false);
+      }
+
+      // Main Bullion Smelting & Assaying Hall (Graphite slate with polished gold bands)
+      const hallW = 26, hallH = 6.8, hallD = 22;
+      box(hallW, hallH, hallD, '#1e293b', -6, hallH / 2, -2, g);
+      box(hallW + 0.4, 0.4, hallD + 0.4, '#eab308', -6, hallH + 0.2, -2, g);
+      box(hallW + 0.2, 0.3, hallD + 0.2, '#facc15', -6, hallH / 2, -2, g);
+
+      // Smelting Furnace Tower with molten thermal crown
+      box(8, 14, 8, '#0f172a', -14, 7, -6, g);
+      box(8.4, 0.6, 8.4, '#eab308', -14, 14.3, -6, g);
+      cyl(1.6, 2.0, 5.0, '#334155', -14, 16.5, -6, g, 20);
+      cyl(1.65, 1.65, 0.5, '#f59e0b', -14, 19.1, -6, g, 20);
+      const glowM = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 0.4, 16), new THREE.MeshStandardMaterial({ color: '#fef08a', emissive: '#eab308', emissiveIntensity: 0.9 }));
+      glowM.position.set(-14, 19.3, -6); g.add(glowM);
+
+      // Ultra-secure Armored Vault Wing
+      box(14, 6.2, 18, '#334155', 12, 3.1, -4, g);
+      box(14.4, 0.35, 18.4, '#eab308', 12, 6.3, -4, g);
+
+      // Circular Vault Door on the vault facade
+      cyl(2.8, 2.8, 0.5, '#64748b', 12, 3.2, 5.1, g, 24);
+      cyl(2.4, 2.4, 0.6, '#eab308', 12, 3.2, 5.15, g, 24);
+      cyl(0.7, 0.7, 0.8, '#0f172a', 12, 3.2, 5.2, g, 16);
+      for (let a = 0; a < 4; a++) {
+        const spoke = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.22, 0.2), mat('#f8fafc'));
+        spoke.rotation.z = (a * Math.PI) / 4;
+        spoke.position.set(12, 3.2, 5.4);
+        g.add(spoke);
+      }
+
+      // Armored security checkpoint tower
+      box(3.6, 8.5, 3.6, '#1e293b', 18, 4.25, 12, g);
+      box(4.2, 1.2, 4.2, '#0f172a', 18, 8.5, 12, g);
+      box(3.8, 0.8, 3.8, '#38bdf8', 18, 8.5, 12, g, false);
+      box(4.4, 0.3, 4.4, '#eab308', 18, 9.25, 12, g);
+
+      // Loading bay with gold roll-up door
+      box(5.5, 4.2, 0.2, '#0f172a', -6, 2.1, 9.1, g);
+      box(4.5, 3.4, 0.1, '#fef08a', -6, 1.7, 9.2, g);
+      for (let r = 0; r < 7; r++) box(4.4, 0.05, 0.12, '#eab308', -6, 0.4 + r * 0.45, 9.22, g, false);
+      box(4.8, 0.3, 1.2, '#ca8a04', -6, 3.9, 9.6, g);
+
+      // Pallets of pure gold bullion in yard
+      const makeGoldPallet = (px, pz) => {
+        box(2.0, 0.25, 2.0, '#78350f', px, 0.125, pz, g);
+        for (let bx = -0.6; bx <= 0.61; bx += 0.6) {
+          for (let bz = -0.6; bz <= 0.61; bz += 0.6) {
+            box(0.5, 0.3, 0.5, '#eab308', px + bx, 0.4, pz + bz, g);
+            box(0.42, 0.25, 0.42, '#fde047', px + bx, 0.67, pz + bz, g);
+          }
+        }
+      };
+      makeGoldPallet(4, 10);
+      makeGoldPallet(7, 10);
+
+      // Armored Carrier Truck
+      const yardTk = makeTruck({ name: 'Bullion Express', stripe: '#eab308', cab: '#1e293b', from: 'Federal Reserve' }, false);
+      yardTk.position.set(12, 0, 11);
+      yardTk.rotation.y = Math.PI;
+      g.add(yardTk);
+
+      // Billboard
+      const factTex = canvasTex(1024, 160, (ctx, W, H) => {
+        ctx.fillStyle = '#090d16'; ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = '#eab308'; ctx.fillRect(0, 0, 24, H); ctx.fillRect(W - 24, 0, 24, H);
+        ctx.font = '800 66px "Bricolage Grotesque", sans-serif'; ctx.fillStyle = '#fef08a'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('GOLD FACTORY', W / 2, H / 2 - 8);
+        ctx.font = '700 26px "JetBrains Mono", monospace'; ctx.fillStyle = '#eab308';
+        ctx.fillText('BULLION REFINERY & PRECISION MINTING FACILITY', W / 2, H / 2 + 42);
+      });
+      plane(factTex, 14, 2.2, g, -6, 8.0, 9.2);
+
+      const selObj = { kind: 'factory', name: 'Gold Factory', code: 'PLANT-AU', type: 'Bullion Refinery & Mint', cx, cz };
+      g.userData.sel = selObj;
+      town.objs.set('landmark:factory_gold', g);
+      return g;
+    }
+    const makeFactory = makeCopperSolarFactory;
 
     function makeMall1(cx, cz) {
       const g = new THREE.Group(); g.position.set(cx, 0, cz); townStatic.add(g);
@@ -1396,21 +1576,26 @@
         const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthTest: false, transparent: true })); sp.renderOrder = 12; sp.position.set(st.k * SLICE_W - 10, 16, 0); sp.visible = false; env.add(sp); town.pins.push(sp);
       });
 
-      // 1 Factory in the Front (in front of WH 1), 2 Malls in the Back (behind WH 2 & WH 3)
-      makeFactory(0, 78);
+      // 3 Factories in the Front (z = 78), 2 Malls in the Back (z = -50)
+      makeGoldFactory(-96, 78);
+      makeWoodToysFactory(0, 78);
+      makeCopperSolarFactory(96, 78);
       makeMall1(-96, -50);
       makeMall2(96, -50);
 
       const makeLandmarkPin = (code, name, accent, px, py, pz) => {
         const tex = canvasTex(640, 140, (g, W, H) => {
           g.fillStyle = 'rgba(255,255,255,.96)'; const r = 34; g.beginPath(); g.moveTo(r, 8); g.arcTo(W - 8, 8, W - 8, H - 8, r); g.arcTo(W - 8, H - 8, 8, H - 8, r); g.arcTo(8, H - 8, 8, 8, r); g.arcTo(8, 8, W - 8, 8, r); g.fill();
-          g.fillStyle = accent; g.beginPath(); g.moveTo(52, 26); g.arcTo(196, 26, 196, 114, 16); g.arcTo(196, 114, 30, 114, 16); g.arcTo(30, 114, 30, 26, 16); g.arcTo(30, 26, 196, 26, 16); g.fill();
-          g.fillStyle = '#fff'; g.font = '800 38px "JetBrains Mono", monospace'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(code, 113, 72);
+          g.fillStyle = accent; g.beginPath(); g.moveTo(46, 26); g.arcTo(202, 26, 202, 114, 16); g.arcTo(202, 114, 24, 114, 16); g.arcTo(24, 114, 24, 26, 16); g.arcTo(24, 26, 202, 26, 16); g.fill();
+          const cSize = code.length > 8 ? 22 : code.length > 5 ? 28 : 38;
+          g.fillStyle = '#fff'; g.font = '800 ' + cSize + 'px "JetBrains Mono", monospace'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(code, 113, 72);
           g.fillStyle = '#1b2638'; g.textAlign = 'left'; g.font = '800 48px "Bricolage Grotesque", Figtree, sans-serif'; g.fillText(name.length > 17 ? name.slice(0, 16) + '…' : name, 222, 74);
         });
         const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthTest: false, transparent: true })); sp.renderOrder = 12; sp.position.set(px, py, pz); sp.visible = false; env.add(sp); town.pins.push(sp);
       };
-      makeLandmarkPin('PLANT', 'Titan Factory', '#ea580c', 0, 18, 78);
+      makeLandmarkPin('GOLD', 'Gold Factory', '#eab308', -96, 18, 78);
+      makeLandmarkPin('WOOD·TOYS', 'Wood & Toys', '#16a34a', 0, 18, 78);
+      makeLandmarkPin('COPPER·SOLAR', 'Copper & Solar', '#ea580c', 96, 18, 78);
       makeLandmarkPin('MALL 1', 'Grand Plaza', '#2563eb', -96, 18, -50);
       makeLandmarkPin('MALL 2', 'Crystal Galleria', '#d97706', 96, 18, -50);
       buildUnit7();
@@ -3250,9 +3435,21 @@
         h += istat(w.st, w.cls, w.loc);
         h += '<div class="irows">' + irow('Quantity', fmtN(u) + ' units') + irow('Gross weight', fmtN(u * UNIT_KG[k] + 25) + ' kg') + irow('Location', esc(w.loc)) + irow('Lot', m.lot) + irow('Received', fmtT(m.recv)) + irow('Site', esc(site.name)) + '</div>';
       } else if (s.kind === 'factory') {
-        h += insHead('INDUSTRIAL COMPLEX · PLANT', s.name, s.type, ICON.star, false);
-        h += istat('Operational', 'ok', 'Heavy manufacturing & chemical synthesis');
-        h += '<div class="irows">' + irow('Facility Code', s.code) + irow('Sector', 'Industrial Heavy Manufacturing') + irow('Output', 'Structural Components & Refined Alloys') + irow('Location', 'Front of Warehouse 1 (South)') + irow('Logistics', 'Dedicated Rail & Heavy Truck Staging') + '</div>';
+        const isGold = s.code === 'PLANT-AU' || s.name.includes('Gold');
+        const isWoodToys = s.code === 'PLANT-WT' || s.name.includes('Wood') || s.name.includes('Toys');
+        if (isGold) {
+          h += insHead('BULLION REFINERY · ' + s.code, s.name, s.type, ICON.star, false);
+          h += istat('Secure & Refining', 'ok', 'High-purity gold smelting, assaying & bullion minting');
+          h += '<div class="irows">' + irow('Facility Code', s.code) + irow('Sector', 'Precious Metals & Bullion Minting') + irow('Output', '99.99% Fine Gold Bullion, Pellets & Bars') + irow('Location', 'Front of Warehouse 2 (Gold)') + irow('Security', 'Class IV Armored Vault & 24/7 Armed Security Detail') + '</div>';
+        } else if (isWoodToys) {
+          h += insHead('TIMBER & TOY FABRICATION · ' + s.code, s.name, s.type, ICON.star, false);
+          h += istat('Operational', 'ok', 'Timber processing & precision robotic toy fabrication');
+          h += '<div class="irows">' + irow('Facility Code', s.code) + irow('Sector', 'Timber Milling & Toy Manufacturing') + irow('Output', 'Kiln-Dried Hardwood Lumber & Educational Modular Toys') + irow('Location', 'Front of Warehouse 1 (Wood)') + irow('Logistics', 'Log Rail Staging & High-Cube Distribution') + '</div>';
+        } else {
+          h += insHead('METALLURGY & SOLAR · ' + s.code, s.name, s.type, ICON.star, false);
+          h += istat('Operational', 'ok', 'Copper cathode smelting & photovoltaic solar synthesis');
+          h += '<div class="irows">' + irow('Facility Code', s.code) + irow('Sector', 'Industrial Metallurgy & Clean Energy') + irow('Output', 'Electrolytic Copper Cathodes & Photovoltaic Solar Modules') + irow('Location', 'Front of Warehouse 3 (Copper) & near WH 5 (Solar)') + irow('Logistics', 'Dedicated Heavy Industrial Yard & Rail Siding') + '</div>';
+        }
       } else if (s.kind === 'mall') {
         h += insHead('COMMERCIAL COMPLEX · RETAIL', s.name, s.type, ICON.star, false);
         h += istat('Open to Public', 'ok', s.name.includes('Crystal') ? 'Luxury boutiques & cinema center' : 'Department stores & dining pavilion');
@@ -3380,7 +3577,7 @@
         if (lastTap && (now - lastTap.t < 380) && Math.hypot(e.clientX - lastTap.x, e.clientY - lastTap.y) < 30) {
           lastTap = null;
           setRay(e.clientX, e.clientY);
-          const lmObjs = ['landmark:factory', 'landmark:mall1', 'landmark:mall2'].map(k => town.objs.get(k)).filter(Boolean);
+          const lmObjs = ['landmark:factory_gold', 'landmark:factory_wood_toys', 'landmark:factory_copper_solar', 'landmark:factory', 'landmark:mall1', 'landmark:mall2'].map(k => town.objs.get(k)).filter(Boolean);
           const lmHit = ray.intersectObjects(lmObjs, true).find(h => !h.object.isSprite);
           if (lmHit) {
             let o = lmHit.object; while (o && !o.userData.sel) o = o.parent;
@@ -3452,7 +3649,7 @@
     function onDblClick(e) {
       e.preventDefault();
       setRay(e.clientX, e.clientY);
-      const lmObjs = ['landmark:factory', 'landmark:mall1', 'landmark:mall2'].map(k => town.objs.get(k)).filter(Boolean);
+      const lmObjs = ['landmark:factory_gold', 'landmark:factory_wood_toys', 'landmark:factory_copper_solar', 'landmark:factory', 'landmark:mall1', 'landmark:mall2'].map(k => town.objs.get(k)).filter(Boolean);
       const lmHit = ray.intersectObjects(lmObjs, true).find(h => !h.object.isSprite);
       if (lmHit) {
         let o = lmHit.object; while (o && !o.userData.sel) o = o.parent;
@@ -3987,8 +4184,20 @@
     });
     q.addEventListener('keydown', e => {
       if (e.key !== 'Enter') return; const v = q.value.trim().toUpperCase(); if (!v) return;
-      if (v.includes('FACTORY') || v.includes('TITAN') || v.includes('PLANT')) {
-        const f = town.objs.get('landmark:factory');
+      if (v.includes('GOLD') || v.includes('BULLION') || v.includes('MINT') || v === 'AU') {
+        const f = town.objs.get('landmark:factory_gold');
+        if (f && f.userData.sel) { select(f.userData.sel); view.targetT.set(f.userData.sel.cx, 0, f.userData.sel.cz); view.zoomT = 0.95; dirty = true; toast('ok', f.userData.sel.name, f.userData.sel.type, ICON.star); q.value = ''; return; }
+      }
+      if (v.includes('WOOD') || v.includes('TOY') || v.includes('TIMBER')) {
+        const f = town.objs.get('landmark:factory_wood_toys');
+        if (f && f.userData.sel) { select(f.userData.sel); view.targetT.set(f.userData.sel.cx, 0, f.userData.sel.cz); view.zoomT = 0.95; dirty = true; toast('ok', f.userData.sel.name, f.userData.sel.type, ICON.star); q.value = ''; return; }
+      }
+      if (v.includes('COPPER') || v.includes('SOLAR') || v.includes('TITAN') || v.includes('SMELT')) {
+        const f = town.objs.get('landmark:factory_copper_solar') || town.objs.get('landmark:factory');
+        if (f && f.userData.sel) { select(f.userData.sel); view.targetT.set(f.userData.sel.cx, 0, f.userData.sel.cz); view.zoomT = 0.95; dirty = true; toast('ok', f.userData.sel.name, f.userData.sel.type, ICON.star); q.value = ''; return; }
+      }
+      if (v.includes('FACTORY') || v.includes('PLANT')) {
+        const f = town.objs.get('landmark:factory_wood_toys') || town.objs.get('landmark:factory_copper_solar') || town.objs.get('landmark:factory_gold');
         if (f && f.userData.sel) { select(f.userData.sel); view.targetT.set(f.userData.sel.cx, 0, f.userData.sel.cz); view.zoomT = 0.95; dirty = true; toast('ok', f.userData.sel.name, f.userData.sel.type, ICON.star); q.value = ''; return; }
       }
       if (v.includes('MALL 2') || v.includes('CRYSTAL') || v.includes('GALLERIA')) {
